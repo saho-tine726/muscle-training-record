@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
+  auth_id String  @unique
+  email   String  @unique
+  name    String? @default("ゲスト")
+  posts   Post[]
+}
+
+model Post {
+  id              Int             @id @default(autoincrement())
+  uuid            String          @unique @default(uuid())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  author          User?           @relation(fields: [authorId], references: [id])
+  authorId        Int?
+  exerciseEntries ExerciseEntry[]
+}
+
+model ExerciseEntry {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int
+  bodyPart    BodyPart
+  exercise    Exercise
+  weight      Float
+  repetitions Int
+}
+
+enum BodyPart {
+  CHEST // 胸
+  BACK // 背中
+  LEGS // 脚
+  SHOULDERS // 肩
+  ARMS // 腕
+}
+
+enum Exercise {
+  BENCH_PRESS // ベンチプレス
+  CHEST_PRESS // チェストプレス
+  DUMBBELL_FLY // ダンベルフライ
+  DUMBBELL_PRESS // ダンベルプレス
+  INCLINE_DUMBBELL_PRESS // インクラインダンベルプレス
+  PEC_FLY // ペクトラルフライ
+  LAT_PULLDOWN // ラットプルダウン
+  DEADLIFT // デッドリフト
+  CHINNING // チンニング
+  SQUAT // スクワット
+  LEG_PRESS // レッグプレス
+  LEG_EXTENSION // レッグエクステンション
+  LEG_CURL // レッグカール
+  SIDE_RAISE // サイドレイズ
+  SHOULDER_PRESS // ショルダープレス
+  FRONT_RAISE // フロントレイズ
+  ARM_CURL // アームカール
+}
