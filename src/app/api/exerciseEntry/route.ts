@@ -29,7 +29,7 @@ export const GET = async (req: Request, res: NextResponse) => {
 
     const exerciseEntries = await prisma.exerciseEntry.findMany({
       where: { bodyPart: bodyPart as any },
-      include: { post: true }, // Post データも含める
+      include: { post: true },
     });
     return NextResponse.json(
       { message: "Success", exerciseEntries },

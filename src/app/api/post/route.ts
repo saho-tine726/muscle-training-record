@@ -16,11 +16,7 @@ async function doConnect() {
 export const GET = async (req: Request, res: NextResponse) => {
   try {
     await doConnect();
-    const posts = await prisma.post.findMany({
-      include: {
-        exerciseEntries: true,
-      },
-    });
+    const posts = await prisma.post.findMany();
     return NextResponse.json({ message: "Success", posts }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });

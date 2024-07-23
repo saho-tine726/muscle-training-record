@@ -1,0 +1,20 @@
+// 英語を日本語へ変換（種目）
+export const exercisesMap: { [key: string]: string } = {
+  BENCH_PRESS: "ベンチプレス",
+  CHEST_PRESS: "チェストプレス",
+  DUMBBELL_FLY: "ダンベルフライ",
+  DUMBBELL_PRESS: "ダンベルプレス",
+  INCLINE_DUMBBELL_PRESS: "インクラインダンベルプレス",
+  PEC_FLY: "ペクトラルフライ",
+  LAT_PULLDOWN: "ラットプルダウン",
+  DEADLIFT: "デッドリフト",
+  CHINNING: "チンニング",
+  SQUAT: "スクワット",
+  LEG_PRESS: "レッグプレス",
+  LEG_EXTENSION: "レッグエクステンション",
+  LEG_CURL: "レッグカール",
+  SIDE_RAISE: "サイドレイズ",
+  SHOULDER_PRESS: "ショルダープレス",
+  FRONT_RAISE: "フロントレイズ",
+  ARM_CURL: "アームカール",
+};

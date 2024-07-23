@@ -6,7 +6,7 @@ const Header = () => {
   const { session, signOut, user } = useUser();
 
   return (
-    <header className="sticky top-0 left-0 py-4 sm:py-6 px-3 sm:px-10 z-50">
+    <header className="py-4 sm:py-6 px-3 sm:px-10 z-50">
       <div className="mx-auto max-w-screen-xl flex justify-between items-center gap-10">
         <div className="grow-0 shrink-0">
           <div className="text-2xl font-extrabold text-lg sm:text-3xl text-white">

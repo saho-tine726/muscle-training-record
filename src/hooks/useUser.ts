@@ -1,12 +1,13 @@
-import { supabase } from "@/utils/supabase";
 import { useEffect, useState } from "react";
-import { Session } from "@supabase/supabase-js";
-import { UserType } from "@/types/user";
 import { useRouter } from "next/navigation";
+import { useRecoilState } from "recoil";
+import { supabase } from "@/utils/supabase";
+import { UserType } from "@/types/user";
+import { sessionState, userState } from "@/states/authState";
 
 export default function useUser() {
-  const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<UserType | null>(null);
+  const [session, setSession] = useRecoilState(sessionState);
+  const [user, setUser] = useRecoilState(userState);
   const [loading, setLoading] = useState(true);
 
   // 認証状態の監視
@@ -47,6 +48,11 @@ export default function useUser() {
     setupUser();
   }, [session]);
 
+  // ユーザー情報の更新
+  const updateUser = (updatedUser: UserType) => {
+    setUser(updatedUser);
+  };
+
   // ユーザーのサインアップ（新規登録）
   const signUp = async ({
     email,
@@ -83,7 +89,7 @@ export default function useUser() {
     }
   };
 
-  return { session, user, signUp, signIn, signOut, loading };
+  return { session, user, signUp, signIn, signOut, loading, updateUser };
 }
 
 // ログインしていない時にログインページに戻るフック
@@ -97,12 +103,3 @@ export const useRequireAuth = () => {
     }
   }, [loading, session]);
 };
-
-// 日付をYYYY/MM/DDに変換
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  return `${year}/${month}/${day}`;
-}

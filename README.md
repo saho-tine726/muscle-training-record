@@ -8,11 +8,10 @@ Next.js14 を使用した筋トレ記録アプリです。各ユーザーごと�
 
 ## ログインテストアカウント
 
-### テストアカウント ①
+### テストアカウント
 
 <b>ユーザー ID:</b><br/>
 aaa@gmail.com<br/>
-<br/>
 <b>パスワード:</b><br/>
 aaaaaa
 
@@ -24,27 +23,32 @@ aaaaaa
 <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white">
 <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white">
 <img src="https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white">
+<img src="https://img.shields.io/badge/Recoil-3578E5?logo=recoil&logoColor=fff&style=flat">
 </p>
 <table>
   <tr>
     <td>Next.js</td>
-    <td>(14.2.4)</td>
+    <td>14.2.5</td>
   </tr>
   <tr>
     <td>React</td>
-    <td>(^18)</td>
+    <td>^18</td>
   </tr>
   <tr>
     <td>TypeScript</td>
-    <td>(^5)</td>
+    <td>^5</td>
   </tr>
   <tr>
     <td>Tailwind CSS</td>
-    <td>(^3.4.1)</td>
+    <td>^3.4.1</td>
   </tr>
   <tr>
     <td>React Hook Form</td>
-    <td>(^7.52.1)</td>
+    <td>^7.52.1</td>
+  </tr>
+  <tr>
+    <td>Recoil</td>
+    <td>^0.7.7</td>
   </tr>
 </table>
 
@@ -56,7 +60,7 @@ aaaaaa
 <table>
   <tr>
     <td>Prisma</td>
-    <td>(^5.16.2)</td>
+    <td>^5.16.2</td>
   </tr>
 </table>
 
@@ -68,7 +72,7 @@ aaaaaa
 <table>
   <tr>
     <td>Supabase</td>
-    <td>(^2.44.3)</td>
+    <td>^2.44.3</td>
   </tr>
 </table>
 

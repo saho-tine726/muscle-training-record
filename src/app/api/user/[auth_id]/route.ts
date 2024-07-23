@@ -21,7 +21,11 @@ export const GET = async (req: Request, res: NextResponse) => {
     const user = await prisma.user.findUnique({
       where: { auth_id },
       include: {
-        posts: true,
+        posts: {
+          include: {
+            exerciseEntries: true,
+          },
+        },
       },
     });
     return NextResponse.json({ message: "Success", user }, { status: 200 });

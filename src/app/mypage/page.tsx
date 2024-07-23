@@ -12,9 +12,10 @@ type UpdateUserType = {
 };
 
 const MyPage = () => {
-  const { session, user } = useUser();
+  const { session, user, updateUser } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const {
     register,
@@ -38,8 +39,9 @@ const MyPage = () => {
     }
   }, [user, setValue]);
 
-  const updateUser = async (data: UpdateUserType) => {
+  const updateUserHandler = async (data: UpdateUserType) => {
     setLoading(true);
+    setPasswordError(null);
 
     try {
       const updateUserData: any = {
@@ -69,9 +71,13 @@ const MyPage = () => {
         });
 
         if (error) {
-          throw new Error("パスワードの更新に失敗しました。");
+          setPasswordError("パスワードに変更がない場合は、空としてください。");
+          throw new Error("パスワードに変更がない場合は、空としてください。");
         }
       }
+
+      const updatedUser = await res.json();
+      updateUser(updatedUser.user);
 
       setLoading(false);
       router.push("/");
@@ -82,8 +88,8 @@ const MyPage = () => {
   };
 
 
-  const onSubmit: SubmitHandler<UpdateUserType> = (data) => {
-    updateUser(data);
+  const onSubmit: SubmitHandler<UpdateUserType> = async (data) => {
+    updateUserHandler(data);
   };
 
   if (!session) {
@@ -156,6 +162,10 @@ const MyPage = () => {
               </div>
             )}
           </div>
+
+          {passwordError && (
+            <div className="text-red-500 text-sm mb-4">{passwordError}</div>
+          )}
 
           <button
             type="submit"
