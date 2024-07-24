@@ -4,47 +4,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useUser, { useRequireAuth } from "@/hooks/useUser";
-import { BodyPart, Exercise } from "@prisma/client";
+import { BodyPart } from "@prisma/client";
 import { formatDate } from "@/hooks/useDate";
-
-// BodyPart Enum
-const bodyParts: { [key in BodyPart]: string } = {
-  CHEST: "胸",
-  BACK: "背中",
-  LEGS: "脚",
-  SHOULDERS: "肩",
-  ARMS: "腕"
-};
-
-// Exercise Enum
-const exercises: { [key in BodyPart]: Exercise[] } = {
-  CHEST: ["BENCH_PRESS", "CHEST_PRESS", "DUMBBELL_FLY", "DUMBBELL_PRESS", "INCLINE_DUMBBELL_PRESS", "PEC_FLY"],
-  BACK: ["LAT_PULLDOWN", "DEADLIFT", "CHINNING"],
-  LEGS: ["SQUAT", "LEG_PRESS", "LEG_EXTENSION", "LEG_CURL"],
-  SHOULDERS: ["SIDE_RAISE", "SHOULDER_PRESS", "FRONT_RAISE"],
-  ARMS: ["ARM_CURL"]
-};
-
-// 日本語表示用
-const exerciseNames: { [key in Exercise]: string } = {
-  BENCH_PRESS: "ベンチプレス",
-  CHEST_PRESS: "チェストプレス",
-  DUMBBELL_FLY: "ダンベルフライ",
-  DUMBBELL_PRESS: "ダンベルプレス",
-  INCLINE_DUMBBELL_PRESS: "インクラインダンベルプレス",
-  PEC_FLY: "ペクトラルフライ",
-  LAT_PULLDOWN: "ラットプルダウン",
-  DEADLIFT: "デッドリフト",
-  CHINNING: "チンニング",
-  SQUAT: "スクワット",
-  LEG_PRESS: "レッグプレス",
-  LEG_EXTENSION: "レッグエクステンション",
-  LEG_CURL: "レッグカール",
-  SIDE_RAISE: "サイドレイズ",
-  SHOULDER_PRESS: "ショルダープレス",
-  FRONT_RAISE: "フロントレイズ",
-  ARM_CURL: "アームカール"
-};
+import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 
 type FormValues = {
   exercises: {
@@ -83,12 +45,12 @@ const AddPost = () => {
     },
   });
 
-  useEffect(() => {
-    // フォームの初期値を設定する
-    Object.keys(exercises).forEach((bodyPart) => {
-      setValue(`exercises.${bodyPart as BodyPart}.exercise`, "");
-    });
-  }, [setValue]);
+  // useEffect(() => {
+  //   // フォームの初期値を設定する
+  //   Object.keys(exercises).forEach((bodyPart) => {
+  //     setValue(`exercises.${bodyPart as BodyPart}.exercise`, "");
+  //   });
+  // }, [setValue]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setLoading(true);
@@ -99,7 +61,7 @@ const AddPost = () => {
         method: "POST",
         body: JSON.stringify({
           authorId: user?.id,
-          exercises: data.exercises
+          exerciseEntries: data.exercises
         }),
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +89,7 @@ const AddPost = () => {
         <p className="mb-4 text-center font-medium">今日の日付：{formatDate(today.toISOString())}</p>
 
         <div className="mb-6">
-          <Link href="/post/" className="bg-gray-500 px-3 sm:px-4 py-2 rounded-md text-white text-md font-medium transition duration-500 hover:bg-gray-600">やること一覧へ戻る</Link>
+          <Link href="/post/" className="bg-gray-500 px-3 sm:px-4 py-2 rounded-md text-white text-md font-medium transition duration-500 hover:bg-gray-600">トレーニング記録全一覧へ</Link>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -140,7 +102,7 @@ const AddPost = () => {
                   <dd>
                     <select
                       {...register(`exercises.${bodyPart as BodyPart}.exercise`)}
-                      className="w-96 py-1 px-3"
+                      className="w-96 py-1 px-3 cursor-pointer"
                     >
                       <option value="" disabled>選択してください</option>
                       {exercises[bodyPart as BodyPart].map((exercise) => (

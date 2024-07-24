@@ -28,15 +28,27 @@ export const GET = async (req: Request, res: NextResponse) => {
 // post投稿API
 export const POST = async (req: Request, res: NextResponse) => {
   try {
-    const { title, content, authorId } = await req.json();
+    const { exerciseEntries, authorId } = await req.json();
 
     await doConnect();
 
     const post = await prisma.post.create({
       data: {
         authorId,
+        exerciseEntries: {
+          create: exerciseEntries.map((entry: any) => ({
+            bodyPart: entry.bodyPart,
+            exercise: entry.exercise,
+            weight: entry.weight,
+            repetitions: entry.repetitions,
+          })),
+        },
+      },
+      include: {
+        exerciseEntries: true,
       },
     });
+
     return NextResponse.json({ message: "Success", post }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
