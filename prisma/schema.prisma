@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
+  id      String  @id @default(uuid())
   auth_id String  @unique
   email   String  @unique
   name    String? @default("ゲスト")
@@ -19,23 +19,21 @@ model User {
 }
 
 model Post {
-  id              Int             @id @default(autoincrement())
-  uuid            String          @unique @default(uuid())
+  id              String          @id @default(uuid())
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  author          User?           @relation(fields: [authorId], references: [id])
-  authorId        Int?
+  author          User           @relation(fields: [authorId], references: [id])
+  authorId        String
   exerciseEntries ExerciseEntry[]
 }
 
 model ExerciseEntry {
-  id          Int      @id @default(autoincrement())
-  uuid        String   @unique @default(uuid())
+  id          String   @id @default(uuid())
   post        Post     @relation(fields: [postId], references: [id])
-  postId      Int
+  postId      String
   bodyPart    BodyPart
   exercise    Exercise
-  weight      Float
+  weight      Int
   repetitions Int
 }
 

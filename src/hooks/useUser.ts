@@ -61,7 +61,21 @@ export default function useUser() {
     email: string;
     password: string;
   }) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (!error && data.user) {
+      // Supabaseでの登録が成功した場合、Prismaにユーザーを作成
+      await fetch(`/api/user/${user?.auth_id}`, {
+        method: "POST",
+        body: JSON.stringify({
+          auth_id: data.user.id,
+          email: data.user.email,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
     return error;
   };

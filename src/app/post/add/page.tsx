@@ -45,23 +45,48 @@ const AddPost = () => {
     },
   });
 
-  // useEffect(() => {
-  //   // フォームの初期値を設定する
-  //   Object.keys(exercises).forEach((bodyPart) => {
-  //     setValue(`exercises.${bodyPart as BodyPart}.exercise`, "");
-  //   });
-  // }, [setValue]);
+  useEffect(() => {
+    if (user) {
+      // 既存のデータを取得してフォームにセットする処理を追加
+      fetch(`/api/user/${user.auth_id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user.posts.length > 0) {
+            const lastPost = data.user.posts[data.user.posts.length - 1];
+            lastPost.exerciseEntries.forEach((entry: any) => {
+              setValue(`exercises.${entry.bodyPart as BodyPart}.exercise`, entry.exercise);
+              setValue(`exercises.${entry.bodyPart as BodyPart}.weight`, entry.weight);
+              setValue(`exercises.${entry.bodyPart as BodyPart}.repetitions`, entry.repetitions);
+            });
+          }
+        });
+    }
+  }, [user, setValue]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    if(!user) return
     setLoading(true);
 
     try {
+      const exerciseEntries = Object.entries(data.exercises)
+        .filter(([_, entry]) => entry.exercise)
+        .map(([bodyPart, entry]) => ({
+          bodyPart,
+          exercise: entry.exercise,
+          weight: Number(entry.weight),
+          repetitions: Number(entry.repetitions),
+        }));
+      if (exerciseEntries.length === 0) {
+        alert("種目を1つ以上登録してください");
+        setLoading(false);
+        return;
+      }
       const res = await fetch("/api/post/", {
         cache: "no-store", // SSR
         method: "POST",
         body: JSON.stringify({
-          authorId: user?.id,
-          exerciseEntries: data.exercises
+          authorId: user.id,
+          exerciseEntries,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +160,20 @@ const AddPost = () => {
                 </dl>
               </div>
               <div className="mt-4">
-                <button className="bg-gray-500 w-7 h-7 flex align-center justify-center font-bold text-white text-lg">＋</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newExercise = { exercise: "", weight: 0, repetitions: 0 };
+                    const exercises = getValues(`exercises.${bodyPart as BodyPart}`);
+                    setValue(`exercises.${bodyPart as BodyPart}`, {
+                      ...exercises,
+                      [Date.now()]: newExercise,
+                    });
+                  }}
+                  className="bg-gray-500 w-7 h-7 flex align-center justify-center font-bold text-white text-lg"
+                >
+                  ＋
+                </button>
               </div>
             </div>
           ))}

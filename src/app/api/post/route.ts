@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { ExerciseEntry } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -28,15 +29,14 @@ export const GET = async (req: Request, res: NextResponse) => {
 // post投稿API
 export const POST = async (req: Request, res: NextResponse) => {
   try {
-    const { exerciseEntries, authorId } = await req.json();
-
     await doConnect();
+    const { exerciseEntries, authorId } = await req.json();
 
     const post = await prisma.post.create({
       data: {
         authorId,
         exerciseEntries: {
-          create: exerciseEntries.map((entry: any) => ({
+          create: exerciseEntries.map((entry: ExerciseEntry) => ({
             bodyPart: entry.bodyPart,
             exercise: entry.exercise,
             weight: entry.weight,
