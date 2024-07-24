@@ -41,7 +41,7 @@ const PostList = () => {
                   </ul>
                 </div>
                 <div className="mt-4 mb-1 text-right">
-                  <Link href={`/post/${post.uuid}`} className="bg-pink-500 px-3 py-2 rounded-md text-white text-sm font-medium transition duration-500 hover:bg-pink-600">詳細を見る</Link>
+                  <Link href={`/post/detail/${post.uuid}`} className="bg-pink-500 px-3 py-2 rounded-md text-white text-sm font-medium transition duration-500 hover:bg-pink-600">詳細を見る</Link>
                 </div>
               </div>
             ))}

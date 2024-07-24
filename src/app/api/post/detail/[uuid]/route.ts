@@ -15,13 +15,16 @@ async function doConnect() {
 // post詳細記事 取得API
 export const GET = async (req: Request, res: NextResponse) => {
   try {
-    const uuid: string = req.url.split("/post/")[1];
+    const uuid: string = req.url.split("/post/detail/")[1];
 
     await doConnect();
 
     const post = await prisma.post.findFirst({
       where: {
         uuid,
+      },
+      include: {
+        exerciseEntries: true,
       },
     });
     return NextResponse.json({ message: "Success", post }, { status: 200 });
@@ -37,14 +40,14 @@ export const PUT = async (req: Request, res: NextResponse) => {
   try {
     const { title, content, authorId } = await req.json();
 
-    const uuid: string = req.url.split("/post/")[1];
+    const uuid: string = req.url.split("/post/detail/")[1];
 
     await doConnect();
 
     const post = await prisma.post.update({
       data: {
-        title,
-        content,
+        // title,
+        // content,
         authorId,
       },
       where: {
@@ -62,7 +65,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 // post詳細記事 削除API
 export const DELETE = async (req: Request, res: NextResponse) => {
   try {
-    const uuid: string = req.url.split("/post/")[1];
+    const uuid: string = req.url.split("/post/detail/")[1];
 
     await doConnect();
 

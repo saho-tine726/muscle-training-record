@@ -135,7 +135,7 @@ const AddPost = () => {
                 </dl>
               </div>
               <div className="mt-4">
-                <button className="bg-gray-500 w-7 h-7 flex align-center justify-center font-bold text-white text-lg">＋</button>
+                <button className="bg-gray-500 py-1 px-3 flex align-center justify-center font-font-medium text-white rounded-md text-sm">＋ 新しい種目を追加</button>
               </div>
             </div>
           ))}
