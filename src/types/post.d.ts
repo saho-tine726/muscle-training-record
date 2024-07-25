@@ -1,9 +1,8 @@
 import { ExerciseEntryType } from "./exerciseEntry";
 
 export type PostType = {
-  id: number;
-  uuid: string;
-  authorId: number;
+  id: string;
   createdAt: string; // "YYYY/MM/DD"
+  authorId: string;
   exerciseEntries: ExerciseEntryType[];
 };

@@ -6,7 +6,6 @@ import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "@/app/components/BodyPartsLinks";
-import { AddPostLink } from "@/app/components/AddPostLink";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Bar } from "react-chartjs-2"
 
@@ -85,24 +84,22 @@ const BodyPartList = () => {
           <Bar options={options} data={data} />
         </div> */}
 
-        <AddPostLink />
-
         {filteredPosts.length ? (
           <div className="grid grid-cols-3 gap-4">
             {filteredPosts.map((post: PostType) => (
-              <div key={post.uuid} className="bg-gray-300 rounded-lg p-4 flex flex-col justify-between">
+              <div key={post.id} className="bg-gray-300 rounded-lg p-4 flex flex-col justify-between">
                 <div>
                   <p className="font-bold text-lg">{formatDate(post.createdAt)}</p>
                   <ul className="mt-2 flex flex-col gap-1">
                     {post.exerciseEntries.map((exerciseEntry, i) => (
-                      <li key={exerciseEntry.uuid} className="flex gap-1 flex-wrap text-sm">
+                      <li key={exerciseEntry.id} className="flex gap-1 flex-wrap text-sm">
                         <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span>{exercisesMap[exerciseEntry.exercise]}</span><span className="flex gap-1"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div className="mt-4 mb-1 text-right">
-                  <Link href={`/post/${post.uuid}`} className="bg-pink-500 px-3 py-2 rounded-md text-white text-sm font-medium transition duration-500 hover:bg-pink-600">詳細を見る</Link>
+                  <Link href={`/post/${post.id}`} className="bg-pink-500 px-3 py-2 rounded-md text-white text-sm font-medium transition duration-500 hover:bg-pink-600">詳細を見る</Link>
                 </div>
               </div>
             ))}

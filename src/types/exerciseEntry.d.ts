@@ -1,7 +1,6 @@
 export type ExerciseEntryType = {
-  id: number;
-  uuid: string;
-  postId: number;
+  id: string;
+  postId: string;
   bodyPart: string;
   exercise: string;
   weight: number;

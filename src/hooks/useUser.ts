@@ -61,7 +61,22 @@ export default function useUser() {
     email: string;
     password: string;
   }) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      console.error("Sign up error:", error.message);
+    } else if (data.user) {
+      await fetch(`/api/user/${user?.auth_id}`, {
+        method: "POST",
+        body: JSON.stringify({
+          auth_id: data.user.id,
+          email: data.user.email,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
     return error;
   };

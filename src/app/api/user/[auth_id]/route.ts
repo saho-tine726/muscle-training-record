@@ -59,3 +59,24 @@ export const PUT = async (req: Request, res: NextResponse) => {
     await prisma.$disconnect();
   }
 };
+
+// ユーザー情報 登録API(Supabaseに登録したと同時に、Prismaのuserにもpostするように)
+export const POST = async (req: Request, res: NextResponse) => {
+  try {
+    const { auth_id, email } = await req.json();
+
+    await doConnect();
+
+    const user = await prisma.user.create({
+      data: {
+        auth_id,
+        email,
+      },
+    });
+    return NextResponse.json({ message: "Success", user }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+};
