@@ -7,7 +7,7 @@ import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
 
-const PostList = () => {
+const AllPostList = () => {
   const { session, user } = useUser();
 
   useRequireAuth();
@@ -31,8 +31,8 @@ const PostList = () => {
                   <p className="font-bold text-lg">{formatDate(post.createdAt)}</p>
                   <ul className="mt-2 flex flex-col gap-1">
                     {post.exerciseEntries.map((exerciseEntry, i) => (
-                      <li key={exerciseEntry.id} className="flex gap-1 flex-wrap text-sm">
-                        <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span>{exercisesMap[exerciseEntry.exercise]}</span><span className="flex gap-1"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
+                      <li key={exerciseEntry.id} className="flex gap-2 flex-wrap text-sm">
+                        <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
                       </li>
                     ))}
                   </ul>
@@ -51,4 +51,4 @@ const PostList = () => {
   );
 };
 
-export default PostList;
+export default AllPostList;
