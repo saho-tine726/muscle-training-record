@@ -57,8 +57,8 @@ const BodyPartList = () => {
   const latestDates = datesWithData.slice(0, 7);
 
   // "胸" のトレーニング記録がある投稿だけをフィルタリング
-  const chestPosts = sortedPosts.filter((post: PostType) =>
-    post.exerciseEntries.some(entry => entry.bodyPart === BodyPart.CHEST)
+  const backPosts = sortedPosts.filter((post: PostType) =>
+    post.exerciseEntries.some(entry => entry.bodyPart === BodyPart.BACK)
   );
 
   // チャートのデータ
@@ -69,10 +69,10 @@ const BodyPartList = () => {
         type: 'bar', // 棒グラフ
         label: "負荷量（重量 × 回数）の推移",
         data: latestDates.map(date => {
-          const total = chestPosts
+          const total = backPosts
             .filter(post => formatDate(post.createdAt) === date)
             .reduce((sum, post) => sum + post.exerciseEntries
-              .filter(entry => entry.bodyPart === BodyPart.CHEST)
+              .filter(entry => entry.bodyPart === BodyPart.BACK)
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
           return total > 0 ? total : 0; // グラフには0を表示
         }),
@@ -82,10 +82,10 @@ const BodyPartList = () => {
         type: 'line', // 折れ線グラフ
         label: "トレーニング負荷（折れ線）",
         data: latestDates.map(date => {
-          const total = chestPosts
+          const total = backPosts
             .filter(post => formatDate(post.createdAt) === date)
             .reduce((sum, post) => sum + post.exerciseEntries
-              .filter(entry => entry.bodyPart === BodyPart.CHEST)
+              .filter(entry => entry.bodyPart === BodyPart.BACK)
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
           return total > 0 ? total : 0; // グラフには0を表示
         }),
@@ -99,21 +99,21 @@ const BodyPartList = () => {
   return (
     <main className="max-w-[1000px] mx-auto py-6">
       <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">トレーニング記録 「胸」 一覧</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">トレーニング記録 「背中」 一覧</h1>
 
         <BodyPartsLinks />
 
         <Bar options={options} data={data} />
 
-        {chestPosts.length ? (
+        {backPosts.length ? (
           <div className="grid grid-cols-3 gap-4 mt-6">
-            {chestPosts.map((post: PostType) => (
+            {backPosts.map((post: PostType) => (
               <div key={post.id} className="bg-gray-300 rounded-lg p-4 flex flex-col justify-between">
                 <div>
                   <p className="font-bold text-lg border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
                   <ul className="mt-2 flex flex-col gap-2.5">
                     {post.exerciseEntries.map((exerciseEntry, i) => (
-                      exerciseEntry.bodyPart === BodyPart.CHEST && (
+                      exerciseEntry.bodyPart === BodyPart.BACK && (
                         <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-sm">
                           <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
                         </li>
