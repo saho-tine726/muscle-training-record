@@ -6,6 +6,7 @@ import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
+import AllPostLink from "../components/AddPostLink";
 
 const AllPostList = () => {
   const { session, user } = useUser();
@@ -16,6 +17,11 @@ const AllPostList = () => {
     return null;
   }
 
+  // 投稿を日付の降順に並べ替える
+  const sortedPosts = user?.posts
+    ? [...user.posts].sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    : [];
+
   return (
     <main className="max-w-[1000px] mx-auto py-6">
       <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
@@ -23,15 +29,17 @@ const AllPostList = () => {
 
         <BodyPartsLinks />
 
-        {user?.posts.length ? (
+        <AllPostLink />
+
+        {sortedPosts.length ? (
           <div className="grid grid-cols-3 gap-4">
-            {user?.posts.map((post: PostType) => (
+            {sortedPosts.map((post: PostType) => (
               <div key={post.id} className="bg-gray-300 rounded-lg p-4 flex flex-col justify-between">
                 <div>
-                  <p className="font-bold text-lg">{formatDate(post.createdAt)}</p>
-                  <ul className="mt-2 flex flex-col gap-1">
+                  <p className="font-bold text-lg border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
+                  <ul className="mt-2 flex flex-col gap-2.5">
                     {post.exerciseEntries.map((exerciseEntry, i) => (
-                      <li key={exerciseEntry.id} className="flex gap-2 flex-wrap text-sm">
+                      <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-sm">
                         <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
                       </li>
                     ))}
