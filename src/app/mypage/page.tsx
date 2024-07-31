@@ -97,9 +97,9 @@ const MyPage = () => {
   }
 
   return (
-    <main className="max-w-[1000px] mx-auto py-6">
-      <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-center">マイページ</h1>
+    <main className="max-w-[1200px] mx-auto pt-2 md:pt-6 pb-10 px-4 md:px-10">
+      <div className="px-3 md:px-6 py-5 md:py-10 bg-gray-100 rounded-lg shadow-lg">
+        <h1 className="text-xl md:text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">マイページ</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto">
           <div className="mb-4">
             <p className="mb-2 font-medium">ニックネーム</p>
@@ -143,11 +143,11 @@ const MyPage = () => {
           </div>
 
           <div className="mb-4">
-            <p className="mb-2 font-medium">パスワード</p>
+            <p className="mb-2 font-medium">パスワード<br className="md:hidden" /><span className="text-xs">（パスワードに変更がない場合は空としてください）</span></p>
             <input
               id="password"
               type="password"
-              placeholder="パスワードに変更がない場合は空としてください"
+              placeholder=""
               {...register("password", {
                 minLength: {
                   value: 6,

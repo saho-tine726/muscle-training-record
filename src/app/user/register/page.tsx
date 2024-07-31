@@ -40,9 +40,9 @@ const Register = () => {
   };
 
   return (
-    <main className="max-w-[1000px] mx-auto py-6">
-      <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-center">新規会員登録</h1>
+    <main className="max-w-[1200px] mx-auto pt-2 md:pt-6 pb-10 px-4 md:px-10">
+      <div className="px-3 md:px-6 py-5 md:py-10 bg-gray-100 rounded-lg shadow-lg">
+        <h1 className="text-xl md:text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">新規会員登録</h1>
         <form onSubmit={handleSubmit(doRegister)} className="w-full max-w-md mx-auto">
           <div className="mb-4">
             <p className="mb-2 font-medium">メールアドレス</p>

@@ -129,7 +129,7 @@ const AddPost = () => {
   }
 
   return (
-    <main className="max-w-[1000px] mx-auto py-6">
+    <main className="max-w-[1200px] mx-auto pt-2 md:pt-6 pb-10 px-4 md:px-10">
       {loading ? (
         <div className="flex justify-center items-center flex-col mt-10 gap-10">
           <SyncLoader size={15} color={"#F3F4F6"} />
@@ -151,13 +151,13 @@ const AddPost = () => {
                 <div key={bodyPart} className="mb-4 bg-gray-200 p-4 rounded-md">
                   <p className="mb-3 font-bold text-2xl border-l-8 border-gray-600 pl-3">{bodyParts[bodyPart as BodyPart]}</p>
                   {fields.map((field, index) => (
-                    <div key={field.id} className="flex align-center gap-8 mb-2">
+                    <div key={field.id} className="flex flex-col md:flex-row align-center gap-3 md:gap-8 mb-8 md:mb-2">
                       <dl className="col-span-2">
                         <dt className="font-medium mb-1">種目</dt>
                         <dd>
                           <select
                             {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
-                            className="w-96 py-1 px-3 cursor-pointer"
+                            className="w-full md;w-96 py-1 px-3 cursor-pointer"
                           >
                             <option value="" disabled>選択してください</option>
                             {exercises[bodyPart as BodyPart].map((exercise) => (
