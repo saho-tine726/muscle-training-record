@@ -6,7 +6,6 @@ import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
-import AllPostListLink from "@/app/components/AllPostListLink";
 
 type FormValues = {
   exercises: {
@@ -121,8 +120,6 @@ const PostDetail = () => {
       <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
         {/* <h1 className="text-2xl font-bold mb-2 text-center">{formatDate(post.createdAt)}のトレーニング記録</h1> */}
         <h1 className="text-2xl font-bold mb-2 text-center">0000/00/00のトレーニング記録</h1>
-
-        <AllPostListLink />
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {Object.keys(exercises).map((bodyPart) => {
