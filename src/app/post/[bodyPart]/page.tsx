@@ -105,20 +105,26 @@ const BodyPartList = () => {
 
         <BodyPartsLinks />
 
-        <Bar options={options} data={data} />
+        <div className="mb-8">
+          <Link href="/post/" className="bg-gray-500 px-3 sm:px-4 py-2 rounded-md text-white text-md font-medium transition duration-500 hover:bg-gray-600">トレーニング記録全一覧へ</Link>
+        </div>
+
+        <div className="md:h-96 md:w-3/4 mx-auto">
+          <Bar options={options} data={data} />
+        </div>
 
         <div className="mt-5 md:mt-8">
           {filteredPosts.length ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
               {filteredPosts.map((post: PostType) => (
-                <div key={post.id} className="bg-gray-300 rounded-lg p-4 flex flex-col justify-between">
+                <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
                   <div>
-                    <p className="font-bold md:text-lg border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
-                    <ul className="mt-2 flex flex-col gap-2.5">
+                    <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
+                    <ul className="mt-2 flex flex-col gap-2">
                       {post.exerciseEntries.map((exerciseEntry, i) => (
                         exerciseEntry.bodyPart === bodyPart.toUpperCase() && (
-                          <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-xs md:text-sm">
-                            <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-xs md:text-sm font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
+                          <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-xs bg-white py-1 px-1.5 rounded-md">
+                            <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-xs font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
                           </li>
                         )
                       ))}
