@@ -5,8 +5,10 @@ import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
-import { SyncLoader } from "react-spinners";
 import AllPostListLink from "@/app/components/AllPostListLink";
+import { useRecoilValue } from "recoil";
+import { sessionState, userState } from "@/states/authState";
+import { usePathname } from "next/navigation";
 
 type FormValues = {
   exercises: {
@@ -17,11 +19,12 @@ type FormValues = {
 };
 
 const PostDetail = () => {
-  const { session, user } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  useRequireAuth();
+  const postId = usePathname().split('/').pop();
+  // useRequireAuth();
 
   const {
     register,
@@ -55,20 +58,37 @@ const PostDetail = () => {
   useEffect(() => {
     if (user) {
       // 既存のデータを取得してフォームにセットする処理を追加
-      fetch(`/api/user/${user.auth_id}`)
+      fetch(`/api/post/detail/${postId}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data.user.posts.length > 0) {
-            const lastPost = data.user.posts[data.user.posts.length - 1];
-            lastPost.exerciseEntries.forEach((entry: any) => {
-              setValue(`exercises.${entry.bodyPart as BodyPart}.exercise`, entry.exercise);
-              setValue(`exercises.${entry.bodyPart as BodyPart}.weight`, entry.weight);
-              setValue(`exercises.${entry.bodyPart as BodyPart}.repetitions`, entry.repetitions);
+          const entriesByBodyPart: Record<BodyPart, any[]> = {
+            CHEST: [],
+            BACK: [],
+            LEGS: [],
+            SHOULDERS: [],
+            ARMS: [],
+          };
+  
+          data.post.exerciseEntries.forEach((entry: any) => {
+            entriesByBodyPart[entry.bodyPart as BodyPart].push(entry);
+          });
+  
+          Object.keys(entriesByBodyPart).forEach((bodyPart) => {
+            const entries = entriesByBodyPart[bodyPart as BodyPart];
+            // 既存のフィールドをリセット
+            fieldArrays[bodyPart as BodyPart].replace([]);
+            // 新しいエントリを追加
+            entries.forEach((entry) => {
+              fieldArrays[bodyPart as BodyPart].append({
+                exercise: entry.exercise,
+                weight: entry.weight,
+                repetitions: entry.repetitions,
+              });
             });
-          }
+          });
         });
     }
-  }, [user, setValue]);
+  }, [user, postId, setValue]);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
