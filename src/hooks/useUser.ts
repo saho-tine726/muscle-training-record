@@ -40,12 +40,15 @@ export default function useUser() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
+          // console.log('User data set:', data.user);
+          
         } else {
           console.error("Failed to fetch user data");
         }
       }
     };
     setupUser();
+      // console.log("setupUser useEffect triggered with session:", session);
   }, [session]);
 
   // ユーザー情報の更新

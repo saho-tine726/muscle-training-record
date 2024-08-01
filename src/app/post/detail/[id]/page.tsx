@@ -111,98 +111,136 @@ const PostDetail = () => {
     }
   };
 
+  // この日付の記録を全て削除
+  const handleDeleteAll = () => {
+    console.log('handleDeleteAll');
+  }
+
+  // 種目の記録をリセット（種目の記録が1つの場合）
+  const handleResetExercise = () => {
+    console.log('reset');
+  }
+
+  // 種目の記録を削除（種目の記録2つ目以降）
+  const handleDeleteExercise = () => {
+    console.log('delete');
+  }
+
   if (!session) {
     return null;
   }
 
   return (
-    <main className="max-w-[1000px] mx-auto py-6">
-      <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-        {/* <h1 className="text-2xl font-bold mb-2 text-center">{formatDate(post.createdAt)}のトレーニング記録</h1> */}
-        <h1 className="text-2xl font-bold mb-2 text-center">0000/00/00のトレーニング記録</h1>
+    <>
+      <title>トレーニング記録詳細</title>
+      <main className="max-w-[1000px] mx-auto py-6">
+        <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
+          {/* <h1 className="text-2xl font-bold mb-2 text-center">{formatDate(post.createdAt)}のトレーニング記録</h1> */}
+          <h1 className="text-2xl font-bold mb-2 text-center">0000/00/00のトレーニング記録</h1>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {Object.keys(exercises).map((bodyPart) => {
-            const { fields, append } = fieldArrays[bodyPart as BodyPart];
+          <div className="mb-4 text-right">
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded-md transition duration-500 hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-500"
+              onClick={handleDeleteAll}
+            >この日付の記録を全て削除
+            </button>
+          </div>
 
-            return (
-              <div key={bodyPart} className="mb-4 bg-gray-200 p-4 rounded-md">
-                <p className="mb-3 font-bold text-2xl border-l-8 border-gray-600 pl-3">{bodyParts[bodyPart as BodyPart]}</p>
-                {fields.map((field, index) => (
-                  <div key={field.id} className="flex align-center gap-8 mb-2">
-                    <dl className="col-span-2">
-                      <dt className="font-medium mb-1">種目</dt>
-                      <dd>
-                        <select
-                          {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
-                          className="w-96 py-1 px-3 cursor-pointer"
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {Object.keys(exercises).map((bodyPart) => {
+              const { fields, append } = fieldArrays[bodyPart as BodyPart];
+
+              return (
+                <div key={bodyPart} className="mb-4 bg-gray-200 p-4 rounded-md">
+                  <p className="mb-3 font-bold text-2xl border-l-8 border-gray-600 pl-3">{bodyParts[bodyPart as BodyPart]}</p>
+                  {fields.map((field, index) => (
+                    <div key={field.id} className="flex align-center gap-8 mb-2">
+                      <dl className="col-span-2">
+                        <dt className="font-medium mb-1">種目</dt>
+                        <dd>
+                          <select
+                            {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
+                            className="w-96 py-1 px-3 cursor-pointer"
+                          >
+                            <option value="" disabled>選択してください</option>
+                            {exercises[bodyPart as BodyPart].map((exercise) => (
+                              <option key={exercise} value={exercise}>{exerciseNames[exercise]}</option>
+                            ))}
+                          </select>
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt className="font-medium mb-1">重量</dt>
+                        <dd className="flex align-center gap-3">
+                          <input
+                            type="number"
+                            {...register(`exercises.${bodyPart as BodyPart}[${index}].weight`)}
+                            className="w-24 py-1 px-3"
+                          />
+                          <span className="grow-0 shrink-0">kg</span>
+                        </dd>
+                      </dl>
+                      <dl>
+                        <dt className="font-medium mb-1">回数</dt>
+                        <dd className="flex align-center gap-3">
+                          <input
+                            type="number"
+                            {...register(`exercises.${bodyPart as BodyPart}[${index}].repetitions`)}
+                            className="w-24 py-1 px-3"
+                          />
+                          <span className="grow-0 shrink-0">回</span>
+                        </dd>
+                      </dl>
+                      <div className="self-end">
+                        <button
+                          type="button"
+                          className="bg-teal-600 text-white p-2 rounded-md transition text-sm duration-500 hover:bg-teal-700 focus:outline-none focus:ring focus:border-blue-500"
+                          onClick={handleResetExercise}
                         >
-                          <option value="" disabled>選択してください</option>
-                          {exercises[bodyPart as BodyPart].map((exercise) => (
-                            <option key={exercise} value={exercise}>{exerciseNames[exercise]}</option>
-                          ))}
-                        </select>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt className="font-medium mb-1">重量</dt>
-                      <dd className="flex align-center gap-3">
-                        <input
-                          type="number"
-                          {...register(`exercises.${bodyPart as BodyPart}[${index}].weight`)}
-                          className="w-24 py-1 px-3"
-                        />
-                        <span className="grow-0 shrink-0">kg</span>
-                      </dd>
-                    </dl>
-                    <dl>
-                      <dt className="font-medium mb-1">回数</dt>
-                      <dd className="flex align-center gap-3">
-                        <input
-                          type="number"
-                          {...register(`exercises.${bodyPart as BodyPart}[${index}].repetitions`)}
-                          className="w-24 py-1 px-3"
-                        />
-                        <span className="grow-0 shrink-0">回</span>
-                      </dd>
-                    </dl>
+                          リセット
+                        </button>
+                        {/* <button
+                          type="button"
+                          className="bg-red-600 text-white p-2 rounded-md transition text-sm duration-500 hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-500"
+                          onClick={handleDeleteExercise}
+                        >
+                          削除
+                        </button> */}
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={() => append({ exercise: "", weight: 0, repetitions: 0 })}
+                      className="bg-gray-500 py-1 px-3 flex align-center justify-center font-font-medium text-white rounded-md text-sm"
+                    >
+                      ＋ 新しい種目を追加
+                    </button>
                   </div>
-                ))}
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    onClick={() => append({ exercise: "", weight: 0, repetitions: 0 })}
-                    className="bg-gray-500 py-1 px-3 flex align-center justify-center font-font-medium text-white rounded-md text-sm"
-                  >
-                    ＋ 新しい種目を追加
-                  </button>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          <div className="flex justify-between">
-            {/* <button
+            <div className="flex justify-between">
+              {/* <button
               type="submit"
               className="bg-blue-500 text-white px-6 py-3 text-lg rounded-md transition duration-500 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500"
               disabled={loading}
             >
               {loading ? "更新中..." : "更新"}
             </button> */}
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-6 py-3 text-lg rounded-md transition duration-500 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500"
-            >
-              更新
-            </button>
-            <button
-              className="bg-red-600 text-white px-6 py-3 text-lg rounded-md transition duration-500 hover:bg-red700 focus:outline-none focus:ring focus:border-blue-500"
-            >この日付のデータを全て削除
-            </button>
-          </div>
-        </form>
-      </div>
-    </main>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-6 py-3 text-lg rounded-md transition duration-500 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500"
+              >
+                更新
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </>
   );
 };
 

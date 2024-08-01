@@ -79,9 +79,9 @@ aaaaaa
   </tr>
 </table>
 
-## ER図
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/169561547/354113421-6c5d24dc-2d57-41dd-857f-a54eaf845934.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240801%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240801T065711Z&X-Amz-Expires=300&X-Amz-Signature=c0a25c727b41427586802e65cbf98514de7272b7d3c54e3affb5eced1037bb65&X-Amz-SignedHeaders=host&actor_id=169561547&key_id=0&repo_id=831995196">
+## ER 図
 
+<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/169561547/354113421-6c5d24dc-2d57-41dd-857f-a54eaf845934.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240801%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240801T065711Z&X-Amz-Expires=300&X-Amz-Signature=c0a25c727b41427586802e65cbf98514de7272b7d3c54e3affb5eced1037bb65&X-Amz-SignedHeaders=host&actor_id=169561547&key_id=0&repo_id=831995196">
 
 ## 仕様
 
