@@ -79,6 +79,10 @@ aaaaaa
   </tr>
 </table>
 
+## ER図
+<img src="![er](https://github.com/user-attachments/assets/6c5d24dc-2d57-41dd-857f-a54eaf845934)">
+
+
 ## 仕様
 
 ### 全ページ共通
