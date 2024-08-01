@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
+import { sessionState, userState } from "@/states/authState";
+import { useRecoilValue } from "recoil";
 
 type FormValues = {
   exercises: {
@@ -16,11 +18,15 @@ type FormValues = {
 };
 
 const PostDetail = () => {
-  const { session, user } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useRequireAuth();
+
+  const postId = usePathname().split('/').pop();
 
   const {
     register,
@@ -30,16 +36,16 @@ const PostDetail = () => {
     control,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
-      exercises: {
-        CHEST: [{ exercise: "", weight: 0, repetitions: 0 }],
-        BACK: [{ exercise: "", weight: 0, repetitions: 0 }],
-        LEGS: [{ exercise: "", weight: 0, repetitions: 0 }],
-        SHOULDERS: [{ exercise: "", weight: 0, repetitions: 0 }],
-        ARMS: [{ exercise: "", weight: 0, repetitions: 0 }],
-      },
-      authorId: 0,
-    },
+    // defaultValues: {
+    //   exercises: {
+    //     CHEST: [{ exercise: "", weight: 0, repetitions: 0 }],
+    //     BACK: [{ exercise: "", weight: 0, repetitions: 0 }],
+    //     LEGS: [{ exercise: "", weight: 0, repetitions: 0 }],
+    //     SHOULDERS: [{ exercise: "", weight: 0, repetitions: 0 }],
+    //     ARMS: [{ exercise: "", weight: 0, repetitions: 0 }],
+    //   },
+    //   authorId: 0,
+    // },
   });
 
   // useFieldArrayをボディパートごとに設定する
@@ -54,21 +60,39 @@ const PostDetail = () => {
   useEffect(() => {
     if (user) {
       // 既存のデータを取得してフォームにセットする処理を追加
-      fetch(`/api/user/${user.auth_id}`)
+      fetch(`/api/post/detail/${postId}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data.user.posts.length > 0) {
-            const lastPost = data.user.posts[data.user.posts.length - 1];
-            lastPost.exerciseEntries.forEach((entry: any) => {
-              setValue(`exercises.${entry.bodyPart as BodyPart}.exercise`, entry.exercise);
-              setValue(`exercises.${entry.bodyPart as BodyPart}.weight`, entry.weight);
-              setValue(`exercises.${entry.bodyPart as BodyPart}.repetitions`, entry.repetitions);
+          const entriesByBodyPart: Record<BodyPart, any[]> = {
+            CHEST: [],
+            BACK: [],
+            LEGS: [],
+            SHOULDERS: [],
+            ARMS: [],
+          };
+
+          data.post.exerciseEntries.forEach((entry: any) => {
+            entriesByBodyPart[entry.bodyPart as BodyPart].push(entry);
+          });
+
+          Object.keys(entriesByBodyPart).forEach((bodyPart) => {
+            const entries = entriesByBodyPart[bodyPart as BodyPart];
+            // 既存のフィールドをリセット
+            fieldArrays[bodyPart as BodyPart].replace([]);
+            // 新しいエントリを追加
+            entries.forEach((entry) => {
+              fieldArrays[bodyPart as BodyPart].append({
+                exercise: entry.exercise,
+                weight: entry.weight,
+                repetitions: entry.repetitions,
+              });
             });
-          }
+          });
         });
     }
-  }, [user, setValue]);
+  }, [user, postId, setValue]);
 
+  // 更新ボタンを押したら
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
 
@@ -92,7 +116,7 @@ const PostDetail = () => {
         return;
       }
 
-      const res = await fetch(`/api/post/detail/${data.id}`, {
+      const res = await fetch(`/api/post/detail/${postId}`, {
         method: "PUT",
         body: JSON.stringify({
           authorId: user.id,
@@ -116,10 +140,10 @@ const PostDetail = () => {
     console.log('handleDeleteAll');
   }
 
-  // 種目の記録をリセット（種目の記録が1つの場合）
-  const handleResetExercise = () => {
-    console.log('reset');
-  }
+  // // 種目の記録をリセット（種目の記録が1つの場合）
+  // const handleResetExercise = () => {
+  //   console.log('reset');
+  // }
 
   // 種目の記録を削除（種目の記録2つ目以降）
   const handleDeleteExercise = () => {
@@ -195,17 +219,10 @@ const PostDetail = () => {
                         <button
                           type="button"
                           className="bg-teal-600 text-white p-2 rounded-md transition text-sm duration-500 hover:bg-teal-700 focus:outline-none focus:ring focus:border-blue-500"
-                          onClick={handleResetExercise}
-                        >
-                          リセット
-                        </button>
-                        {/* <button
-                          type="button"
-                          className="bg-red-600 text-white p-2 rounded-md transition text-sm duration-500 hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-500"
                           onClick={handleDeleteExercise}
                         >
                           削除
-                        </button> */}
+                        </button>
                       </div>
                     </div>
                   ))}
