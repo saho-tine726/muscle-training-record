@@ -50,7 +50,14 @@ export const PUT = async (req: Request, res: NextResponse) => {
       },
       data: {
         authorId,
-        exerciseEntries,
+        exerciseEntries: {
+          update: exerciseEntries.map((entry: ExerciseEntry) => ({
+            bodyPart: entry.bodyPart,
+            exercise: entry.exercise,
+            weight: entry.weight,
+            repetitions: entry.repetitions,
+          })),
+        },
       },
     });
     return NextResponse.json({ message: "Success", post }, { status: 200 });
