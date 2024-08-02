@@ -1,8 +1,9 @@
-// 日付をYYYY/MM/DDに変換
+// 日付を日本時間のYYYY/MM/DDに変換
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  return `${year}/${month}/${day}`;
+  const year = date.toLocaleString('ja-JP', { year: 'numeric' });
+  const month = date.toLocaleString('ja-JP', { month: '2-digit' });
+  const day = date.toLocaleString('ja-JP', { day: '2-digit' });
+
+  return `${year}${month}${day}`;
 }
