@@ -36,11 +36,20 @@ const PostDetail = () => {
     setValue,
     control,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      exercises: {
+        CHEST: [],
+        BACK: [],
+        LEGS: [],
+        SHOULDERS: [],
+        ARMS: [],
+      },
+    }
+  });
 
-  // useFieldArrayをボディパートごとに設定する
   const fieldArrays = Object.keys(exercises).reduce((acc, bodyPart) => {
-    acc[bodyPart] = useFieldArray({
+    acc[bodyPart as BodyPart] = useFieldArray({
       control,
       name: `exercises.${bodyPart as BodyPart}` as `exercises.${BodyPart}`,
     });
@@ -48,7 +57,7 @@ const PostDetail = () => {
   }, {} as Record<BodyPart, ReturnType<typeof useFieldArray>>);
 
   useEffect(() => {
-    if (user) {
+    if (user && postId) {
       // 既存のデータを取得してフォームにセットする処理を追加
       fetch(`/api/post/detail/${postId}`)
         .then((res) => res.json())
@@ -71,7 +80,7 @@ const PostDetail = () => {
           Object.keys(entriesByBodyPart).forEach((bodyPart) => {
             const entries = entriesByBodyPart[bodyPart as BodyPart];
             // 既存のフィールドをリセット
-            fieldArrays[bodyPart as BodyPart].replace([]);
+            fieldArrays[bodyPart as BodyPart].remove();
             // 新しいエントリを追加
             entries.forEach((entry) => {
               fieldArrays[bodyPart as BodyPart].append({
@@ -83,7 +92,7 @@ const PostDetail = () => {
           });
         });
     }
-  }, [user, postId, setValue]);
+  }, [user, postId]);
 
   // 更新ボタンを押したら
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
