@@ -33,8 +33,8 @@ const PostDetail = () => {
   const {
     register,
     handleSubmit,
-    setValue,
     control,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -45,16 +45,19 @@ const PostDetail = () => {
         SHOULDERS: [],
         ARMS: [],
       },
-    }
+      authorId: 0,
+      id: '',
+    },
   });
 
-  const fieldArrays = Object.keys(exercises).reduce((acc, bodyPart) => {
-    acc[bodyPart as BodyPart] = useFieldArray({
-      control,
-      name: `exercises.${bodyPart as BodyPart}` as `exercises.${BodyPart}`,
-    });
-    return acc;
-  }, {} as Record<BodyPart, ReturnType<typeof useFieldArray>>);
+  // useFieldArrayをボディパートごとに設定する
+  const fieldArrays = {
+    CHEST: useFieldArray({ control, name: "exercises.CHEST" }),
+    BACK: useFieldArray({ control, name: "exercises.BACK" }),
+    LEGS: useFieldArray({ control, name: "exercises.LEGS" }),
+    SHOULDERS: useFieldArray({ control, name: "exercises.SHOULDERS" }),
+    ARMS: useFieldArray({ control, name: "exercises.ARMS" }),
+  };
 
   useEffect(() => {
     if (user && postId) {
@@ -80,21 +83,16 @@ const PostDetail = () => {
           Object.keys(entriesByBodyPart).forEach((bodyPart) => {
             const entries = entriesByBodyPart[bodyPart as BodyPart];
             // 既存のフィールドをリセット
-            fieldArrays[bodyPart as BodyPart].remove();
-            // 新しいエントリを追加
-            entries.forEach((entry) => {
-              fieldArrays[bodyPart as BodyPart].append({
-                exercise: entry.exercise,
-                weight: entry.weight,
-                repetitions: entry.repetitions,
-              });
-            });
+            fieldArrays[bodyPart as BodyPart].replace(entries.map(entry => ({
+              exercise: entry.exercise,
+              weight: entry.weight,
+              repetitions: entry.repetitions,
+            })));
           });
         });
     }
   }, [user, postId]);
 
-  // 更新ボタンを押したら
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
 
@@ -135,17 +133,14 @@ const PostDetail = () => {
     }
   };
 
-  // この日付の記録を全て削除
   const handleDeleteAll = async () => {
     try {
-      console.log("Attempting to delete post with ID:", postId); // デバッグ用のログ
       const res = await fetch(`/api/post/detail/${postId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log("Delete response:", res); // デバッグ用のログ
       setLoading(false);
       router.push("/post");
     } catch (error) {
@@ -154,7 +149,6 @@ const PostDetail = () => {
     }
   }
 
-  // 種目の記録を削除（種目の記録2つ目以降）
   const handleDeleteExercise = (bodyPart: BodyPart, index: number) => {
     fieldArrays[bodyPart].remove(index);
   }

@@ -19,7 +19,7 @@ type FormValues = {
 const AddPost = () => {
   const { session, user } = useUser();
   const [loading, setLoading] = useState(true);
-  const [hastodayPost, setHastodayPost] = useState(true);
+  const [hasTodayPost, setHasTodayPost] = useState(true);
   const router = useRouter();
 
   useRequireAuth();
@@ -44,7 +44,7 @@ const AddPost = () => {
           });
 
           if (hasTodayPost) {
-            setHastodayPost(false)
+            setHasTodayPost(false);
             router.push("/post");
           } else {
             setLoading(false);
@@ -73,13 +73,29 @@ const AddPost = () => {
     },
   });
 
-  const fieldArrays = Object.keys(exercises).reduce((acc, bodyPart) => {
-    acc[bodyPart] = useFieldArray({
+  // 各ボディパートごとのフィールド配列を設定
+  const fieldArrays = {
+    CHEST: useFieldArray({
       control,
-      name: `exercises.${bodyPart as BodyPart}` as `exercises.${BodyPart}`,
-    });
-    return acc;
-  }, {} as Record<BodyPart, ReturnType<typeof useFieldArray>>);
+      name: "exercises.CHEST",
+    }),
+    BACK: useFieldArray({
+      control,
+      name: "exercises.BACK",
+    }),
+    LEGS: useFieldArray({
+      control,
+      name: "exercises.LEGS",
+    }),
+    SHOULDERS: useFieldArray({
+      control,
+      name: "exercises.SHOULDERS",
+    }),
+    ARMS: useFieldArray({
+      control,
+      name: "exercises.ARMS",
+    }),
+  };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
@@ -136,7 +152,7 @@ const AddPost = () => {
         {loading ? (
           <div className="flex justify-center items-center flex-col mt-10 gap-10">
             <SyncLoader size={15} color={"#F3F4F6"} />
-            {!hastodayPost ? (
+            {!hasTodayPost ? (
               <p className="text-white">今日のトレーニング記録は既に登録済です。（一覧ページに飛びます...）</p>
             ) : null}
           </div>
@@ -163,7 +179,7 @@ const AddPost = () => {
                           <dt className="font-medium mb-1">種目</dt>
                           <dd>
                             <select
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
+                              {...register(`exercises.${bodyPart}[${index}].exercise` as const)}
                               className="w-full md:w-96 py-1 px-3 cursor-pointer"
                             >
                               <option value="" disabled>選択してください</option>
@@ -178,7 +194,7 @@ const AddPost = () => {
                           <dd className="flex align-center gap-3">
                             <input
                               type="number"
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].weight`)}
+                              {...register(`exercises.${bodyPart}[${index}].weight` as const)}
                               className="w-24 py-1 px-3"
                             />
                             <span className="grow-0 shrink-0">kg</span>
@@ -189,7 +205,7 @@ const AddPost = () => {
                           <dd className="flex align-center gap-3">
                             <input
                               type="number"
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].repetitions`)}
+                              {...register(`exercises.${bodyPart}[${index}].repetitions` as const)}
                               className="w-24 py-1 px-3"
                             />
                             <span className="grow-0 shrink-0">回</span>
