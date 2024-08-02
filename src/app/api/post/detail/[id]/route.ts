@@ -79,11 +79,20 @@ export const DELETE = async (req: Request, res: NextResponse) => {
 
     await doConnect();
 
+    // まず関連する ExerciseEntry を削除する
+    await prisma.exerciseEntry.deleteMany({
+      where: {
+        postId: id,
+      },
+    });
+
+    // 次に Post を削除する
     const post = await prisma.post.delete({
       where: {
         id,
       },
     });
+
     return NextResponse.json({ message: "Success", post }, { status: 200 });
   } catch (error) {
     console.error("Delete Error:", error); // エラーをログに記録
