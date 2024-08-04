@@ -160,10 +160,10 @@ const AddPost = () => {
           <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
             <h1 className="text-xl md:text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">本日のトレーニング追加</h1>
 
-            <p className="mb-4 text-center font-medium">今日の日付：{formatDate(today.toISOString())}</p>
+            <p className="mb-6 text-center font-medium">今日の日付：{formatDate(today.toISOString())}</p>
 
             <div className="mb-8">
-              <Link href="/post/" className="bg-red-600 px-3 sm:px-4 py-2 rounded-md text-white text-md font-medium transition duration-500 hover:bg-red700">トレーニング記録全一覧へ</Link>
+              <Link href="/post/" className="bg-red-600 px-3 sm:px-4 py-3 rounded-md text-white text-md md:text-lg font-medium transition duration-500 hover:bg-red700">トレーニング記録全一覧へ</Link>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
