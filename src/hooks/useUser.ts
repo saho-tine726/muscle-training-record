@@ -40,14 +40,14 @@ export default function useUser() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
-          // console.log('User data set:', data.user);
+          console.log('User data set:', data.user);
         } else {
           console.error("ユーザーデータの取得に失敗しました");
         }
       }
     };
     setupUser();
-    // console.log("setupUser useEffect triggered with session:", session);
+    console.log("setupUser useEffect triggered with session:", session);
   }, [session]);
 
   // ユーザー情報の更新
@@ -113,6 +113,8 @@ export default function useUser() {
 export const useRequireAuth = () => {
   const { session, loading } = useUser();
   const router = useRouter();
+
+  console.log('useRequireAuthフック内');
 
   useEffect(() => {
     if (!loading && !session) {
