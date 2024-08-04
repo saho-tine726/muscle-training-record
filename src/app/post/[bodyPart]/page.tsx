@@ -6,7 +6,7 @@ import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "@/app/components/BodyPartsLinks";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip, Legend, Title } from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip, Legend, Title, LineController } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useParams } from "next/navigation";
 import { ChartData, ChartDataset } from 'chart.js';
@@ -19,7 +19,8 @@ ChartJS.register(
   PointElement,
   Tooltip,
   Legend,
-  Title
+  Title,
+  LineController
 );
 
 const options = {
