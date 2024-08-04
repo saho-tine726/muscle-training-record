@@ -12,7 +12,7 @@ Next.js14 を使用した、筋トレ記録アプリです。<br>
 
 ## デモサイト
 
-https://muscle-training-record-8xeec62hv-sahos-projects-9d6157ef.vercel.app/
+https://muscle-training-record.vercel.app/
 
 ## テストアカウント
 
