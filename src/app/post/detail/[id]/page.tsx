@@ -165,9 +165,9 @@ const PostDetail = () => {
           <SyncLoader size={15} color={"#F3F4F6"} />
         </div>
       ) : (
-        <main className="max-w-[1000px] mx-auto py-6">
+        <main className="max-w-[1200px] mx-auto pt-2 md:pt-6 pb-10 px-4 md:px-10">
           <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-            <h1 className="text-2xl font-bold mb-2 text-center">{post && formatDate(post.createdAt)}のトレーニング記録</h1>
+            <h1 className="text-xl md:text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">{post && formatDate(post.createdAt)}の<br className="md:hidden" />トレーニング記録</h1>
 
             <div className="mb-4 text-right">
               <button
@@ -185,13 +185,13 @@ const PostDetail = () => {
                   <div key={bodyPart} className="mb-4 bg-gray-200 p-4 rounded-md">
                     <p className="mb-3 font-bold text-2xl border-l-8 border-gray-600 pl-3">{bodyParts[bodyPart as BodyPart]}</p>
                     {fields.map((field, index) => (
-                      <div key={field.id} className="flex align-center gap-8 mb-2">
+                      <div key={field.id} className="flex flex-col lg:flex-row align-center gap-3 md:gap-8 mb-8 md:mb-2">
                         <dl className="col-span-2">
                           <dt className="font-medium mb-1">種目</dt>
                           <dd>
                             <select
                               {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
-                              className="w-96 py-1 px-3 cursor-pointer"
+                              className="w-full md:w-96 py-1 px-3 cursor-pointer"
                             >
                               <option value="" disabled>選択してください</option>
                               {exercises[bodyPart as BodyPart].map((exercise) => (
@@ -225,7 +225,7 @@ const PostDetail = () => {
                         <div className="self-end">
                           <button
                             type="button"
-                            className="bg-teal-600 text-white p-2 rounded-md transition text-sm duration-500 hover:bg-teal-700 focus:outline-none focus:ring focus:border-blue-500"
+                            className="bg-teal-600 text-white py-2 px-3 rounded-md transition text-sm duration-500 hover:bg-teal-700 focus:outline-none focus:ring focus:border-blue-500"
                             onClick={() => handleDeleteExercise(bodyPart as BodyPart, index)}
                           >
                             削除

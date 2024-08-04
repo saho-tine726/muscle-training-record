@@ -158,7 +158,7 @@ const AddPost = () => {
           </div>
         ) : (
           <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
-            <h1 className="text-2xl font-bold mb-2 text-center">本日のトレーニング追加</h1>
+            <h1 className="text-xl md:text-2xl font-bold mb-6 text-center border-b-2 border-gray-900 pb-2 w-fit mr-auto ml-auto">本日のトレーニング追加</h1>
 
             <p className="mb-4 text-center font-medium">今日の日付：{formatDate(today.toISOString())}</p>
 
