@@ -190,7 +190,7 @@ const PostDetail = () => {
                           <dt className="font-medium mb-1">種目</dt>
                           <dd>
                             <select
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].exercise`)}
+                              {...register(`exercises.${bodyPart as BodyPart}.${index}.exercise`)}
                               className="w-full md:w-96 py-1 px-3 cursor-pointer"
                             >
                               <option value="" disabled>選択してください</option>
@@ -205,7 +205,7 @@ const PostDetail = () => {
                           <dd className="flex align-center gap-3">
                             <input
                               type="number"
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].weight`)}
+                              {...register(`exercises.${bodyPart as BodyPart}.${index}.weight`)}
                               className="w-24 py-1 px-3"
                             />
                             <span className="grow-0 shrink-0">kg</span>
@@ -216,7 +216,7 @@ const PostDetail = () => {
                           <dd className="flex align-center gap-3">
                             <input
                               type="number"
-                              {...register(`exercises.${bodyPart as BodyPart}[${index}].repetitions`)}
+                              {...register(`exercises.${bodyPart as BodyPart}.${index}.repetitions`)}
                               className="w-24 py-1 px-3"
                             />
                             <span className="grow-0 shrink-0">回</span>
