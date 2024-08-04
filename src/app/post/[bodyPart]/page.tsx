@@ -9,6 +9,7 @@ import { BodyPartsLinks } from "@/app/components/BodyPartsLinks";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Tooltip, Legend, Title } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useParams } from "next/navigation";
+import { ChartData, ChartDataset } from 'chart.js';
 
 ChartJS.register(
   CategoryScale,
@@ -25,19 +26,21 @@ const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top",
-      labels: false
+      position: "top" as const,
+      labels: {
+        color: 'black'
+      }
     },
-  },
-  title: {
-    display: true,
-    text: "Chart.js Bar Chart"
+    title: {
+      display: true,
+      text: "Chart.js Bar Chart"
+    }
   }
 };
 
 const BodyPartList = () => {
   const { session, user } = useUser();
-  const { bodyPart } = useParams();
+  const { bodyPart } = useParams<{ bodyPart: string }>();
 
   useRequireAuth();
 
@@ -45,13 +48,22 @@ const BodyPartList = () => {
     return null;
   }
 
+  // グラフ用のMM年DD日変換
+  function graphFormatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('ja-JP', { month: '2-digit' });
+    const day = date.toLocaleString('ja-JP', { day: '2-digit' });
+
+    return `${month}${day}`;
+  }
+
   // 投稿を日付の降順に並べ替える
-  const sortedPosts = user?.posts
+  const sortedPosts: PostType[] = user?.posts
     ? [...user.posts].sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     : [];
 
   // データが存在する日付を抽出
-  const datesWithData = Array.from(new Set(sortedPosts.map(post => formatDate(post.createdAt))));
+  const datesWithData: string[] = Array.from(new Set(sortedPosts.map(post => graphFormatDate(post.createdAt))));
 
   // 最新30件の日付を取得
   const latestDates = datesWithData.slice(0, 30);
@@ -62,15 +74,15 @@ const BodyPartList = () => {
   );
 
   // チャートのデータ
-  const data = {
-    labels: latestDates, // x軸のラベルとして最新7件の日付を使用
+  const data: ChartData<'bar', number[], string> = {
+    labels: latestDates, // x軸のラベルとして最新30件の日付を使用
     datasets: [
       {
-        type: 'bar', // 棒グラフ
+        type: 'bar' as const, // 棒グラフ
         label: "負荷量（重量 × 回数）の推移",
         data: latestDates.map(date => {
           const total = filteredPosts
-            .filter(post => formatDate(post.createdAt) === date)
+            .filter(post => graphFormatDate(post.createdAt) === date)
             .reduce((sum, post) => sum + post.exerciseEntries
               .filter(entry => entry.bodyPart === bodyPart.toUpperCase())
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
@@ -79,11 +91,11 @@ const BodyPartList = () => {
         backgroundColor: "rgba(233, 42, 42, 0.5)" // グラフの棒の色
       },
       {
-        type: 'line', // 折れ線グラフ
+        type: 'line' as const, // 折れ線グラフ
         label: "トレーニング負荷（折れ線）",
         data: latestDates.map(date => {
           const total = filteredPosts
-            .filter(post => formatDate(post.createdAt) === date)
+            .filter(post => graphFormatDate(post.createdAt) === date)
             .reduce((sum, post) => sum + post.exerciseEntries
               .filter(entry => entry.bodyPart === bodyPart.toUpperCase())
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
@@ -93,7 +105,7 @@ const BodyPartList = () => {
         backgroundColor: "rgba(233, 42, 42, 0.2)", // 折れ線の下の塗りつぶし色
         fill: true, // 折れ線の下を塗りつぶす
       }
-    ]
+    ] as ChartDataset<'bar', number[]>[] // 型キャスト
   };
 
   return (

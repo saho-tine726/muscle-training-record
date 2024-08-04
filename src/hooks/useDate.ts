@@ -1,4 +1,4 @@
-// 日付を日本時間のYYYY/MM/DDに変換
+// 日付を日本時間のYYYY年MM月DD日に変換
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const year = date.toLocaleString('ja-JP', { year: 'numeric' });
