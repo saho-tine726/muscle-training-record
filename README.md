@@ -1,4 +1,4 @@
-# muscle-training-record
+# 筋トレ記録アプリ
 
 ## 概要
 
