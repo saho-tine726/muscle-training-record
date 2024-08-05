@@ -1,14 +1,17 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import useUser, { useRequireAuth } from "@/hooks/useUser";
+import { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
+import { useRecoilValue } from "recoil";
+import { sessionState, userState } from "@/states/authState";
 
 const AllPostList = () => {
-  const { session, user } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
 
   useRequireAuth();
 

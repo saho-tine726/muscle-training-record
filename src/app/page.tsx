@@ -8,6 +8,8 @@ import { formatDate } from "@/hooks/useDate";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
 import Link from "next/link";
+import { useRecoilValue } from 'recoil';
+import { sessionState, userState } from "@/states/authState";
 
 type FormValues = {
   exercises: {
@@ -17,7 +19,10 @@ type FormValues = {
 };
 
 const AddPost = () => {
-  const { session, user } = useUser();
+  // const { session, user } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
+
   const [loading, setLoading] = useState(true);
   const [hasTodayPost, setHasTodayPost] = useState(true);
   const router = useRouter();
