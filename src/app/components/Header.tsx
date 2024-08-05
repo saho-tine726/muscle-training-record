@@ -3,9 +3,13 @@ import Link from "next/link";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { sessionState, userState } from "@/states/authState";
 
 const Header = () => {
-  const { session, signOut, user } = useUser();
+  const { signOut } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
   const [openMenu, setOpenMenu] = useState(false);
 
   const handleMenuOpen = () => {

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { supabase } from "@/utils/supabase";
 import { UserType } from "@/types/user";
-import { sessionState, userState } from "@/states/authState";
+import { loadingState, sessionState, userState } from "@/states/authState";
 
 export default function useUser() {
   const [session, setSession] = useRecoilState(sessionState);
   const [user, setUser] = useRecoilState(userState);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useRecoilState(loadingState)
 
   // 認証状態の監視
   useEffect(() => {
@@ -40,14 +40,12 @@ export default function useUser() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
-          console.log('User data set:', data.user);
         } else {
           console.error("ユーザーデータの取得に失敗しました");
         }
       }
     };
     setupUser();
-    console.log("setupUser useEffect triggered with session:", session);
   }, [session]);
 
   // ユーザー情報の更新
@@ -111,10 +109,9 @@ export default function useUser() {
 
 // ログインしていない時にログインページに戻るフック
 export const useRequireAuth = () => {
-  const { session, loading } = useUser();
+  const session = useRecoilValue(sessionState);
+  const loading = useRecoilValue(loadingState);
   const router = useRouter();
-
-  console.log('useRequireAuthフック内');
 
   useEffect(() => {
     if (!loading && !session) {

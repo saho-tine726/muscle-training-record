@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { supabase } from "@/utils/supabase";
 import useUser, { useRequireAuth } from "@/hooks/useUser";
+import { useRecoilValue } from "recoil";
+import { sessionState, userState } from "@/states/authState";
 
 type UpdateUserType = {
   email: string;
@@ -12,7 +14,9 @@ type UpdateUserType = {
 };
 
 const MyPage = () => {
-  const { session, user, updateUser } = useUser();
+  const { updateUser } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);

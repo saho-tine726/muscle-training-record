@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import useUser, { useRequireAuth } from "@/hooks/useUser";
+import { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
@@ -10,6 +10,8 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, 
 import { Bar } from "react-chartjs-2";
 import { useParams } from "next/navigation";
 import { ChartData, ChartDataset } from 'chart.js';
+import { useRecoilValue } from "recoil";
+import { sessionState, userState } from "@/states/authState";
 
 ChartJS.register(
   CategoryScale,
@@ -35,7 +37,8 @@ const options = {
 };
 
 const BodyPartList = () => {
-  const { session, user } = useUser();
+  const user = useRecoilValue(userState);
+  const session = useRecoilValue(sessionState);
   const { bodyPart } = useParams<{ bodyPart: string }>();
 
   useRequireAuth();
