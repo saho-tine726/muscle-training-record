@@ -1,19 +1,32 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import { useRequireAuth } from "@/hooks/useUser";
+import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
 import { useRecoilValue } from "recoil";
 import { sessionState, userState } from "@/states/authState";
+import { useEffect } from "react";
 
 const AllPostList = () => {
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
-
+  const { updateUser } = useUser()
   useRequireAuth();
+
+  useEffect(() => {
+    if (session) {
+      fetchUserData();
+    }
+  }, [session]);
+
+  const fetchUserData = async () => {
+    const res = await fetch(`/api/user/${session?.user.id}`);
+    const data = await res.json();
+    updateUser(data.user);
+  };
 
   if (!session) {
     return null;
@@ -37,16 +50,14 @@ const AllPostList = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
               {sortedPosts.map((post: PostType) => (
                 <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
-                  <div>
-                    <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
-                    <ul className="mt-2 flex flex-col gap-2">
-                      {post.exerciseEntries.map((exerciseEntry, i) => (
-                        <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-xs bg-white py-1 px-1.5 rounded-md">
-                          <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-xs font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
+                  <ul className="mt-2 flex flex-col gap-2">
+                    {post.exerciseEntries.map((exerciseEntry, i) => (
+                      <li key={exerciseEntry.id} className="flex gap-x-2 gap-y-0.5 flex-wrap text-xs bg-white py-1 px-1.5 rounded-md">
+                        <b>{i + 1}.</b><span className="block w-11 bg-teal-500 text-white text-xs font-medium flex items-center justify-center">{bodyPartsMap[exerciseEntry.bodyPart]}</span><span><b>{exercisesMap[exerciseEntry.exercise]}</b></span><span className="flex gap-1 text-gray-500"><span>{exerciseEntry.weight}kg</span><span>×</span><span>{exerciseEntry.repetitions}回</span></span>
+                      </li>
+                    ))}
+                  </ul>
                   <div className="mt-4 mb-1 text-right">
                     <Link href={`/post/detail/${post.id}`} className="bg-pink-500 px-3 py-2 rounded-md text-white text-xs md:text-sm font-medium transition duration-500 hover:bg-pink-600">詳細を見る</Link>
                   </div>
