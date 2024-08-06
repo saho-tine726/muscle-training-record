@@ -135,8 +135,12 @@ export const useRequireAuth = () => {
   console.log('useRequireAuthです');
 
   useEffect(() => {
-    if (!loading && !session) {
+    const savedSession = localStorage.getItem("session");
+    const hasSessionInLocalStorage = savedSession !== null;
+
+    if (!loading && !session && !hasSessionInLocalStorage) {
+      console.log('ログインページへ戻ります。');
       router.push("/user/login");
     }
-  }, [loading, session]);
+  }, [loading, session, router]);
 };
