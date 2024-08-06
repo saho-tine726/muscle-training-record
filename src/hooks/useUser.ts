@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { supabase } from "@/utils/supabase";
@@ -128,19 +128,14 @@ export default function useUser() {
 
 // ログインしていない時にログインページに戻るフック
 export const useRequireAuth = () => {
-  const session = useRecoilValue(sessionState);
-  const loading = useRecoilValue(loadingState);
   const router = useRouter();
+  const savedSession = localStorage.getItem("session");
+  const hasSessionInLocalStorage = savedSession !== null;
 
-  console.log('useRequireAuthです');
+  console.log('Called：useRequireAuthです');
 
-  useEffect(() => {
-    const savedSession = localStorage.getItem("session");
-    const hasSessionInLocalStorage = savedSession !== null;
-
-    if (!loading && !session && !hasSessionInLocalStorage) {
-      console.log('ログインページへ戻ります。');
-      router.push("/user/login");
-    }
-  }, [loading, session, router]);
+  if (!hasSessionInLocalStorage) {
+    console.log('ログインページへ戻ります。');
+    router.push("/user/login");
+  }
 };
