@@ -19,12 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={`font-noto-sans-jp ${notoSansJP.variable}`}>
-      <body className="bg-gradient-to-r from-purple-500 to-red-500 break-words">
-        <RecoilRoot>
+      <RecoilRoot>
+        <body className="bg-gradient-to-r from-purple-500 to-red-500 break-words">
           <Header />
           {children}
-        </RecoilRoot>
-      </body>
+        </body>
+      </RecoilRoot>
     </html>
   );
 }
