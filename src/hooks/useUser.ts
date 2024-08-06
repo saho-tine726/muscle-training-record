@@ -132,6 +132,8 @@ export const useRequireAuth = () => {
   const loading = useRecoilValue(loadingState);
   const router = useRouter();
 
+  console.log('useRequireAuthです');
+
   useEffect(() => {
     if (!loading && !session) {
       router.push("/user/login");
