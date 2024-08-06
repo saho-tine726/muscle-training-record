@@ -8,20 +8,37 @@ import { loadingState, sessionState, userState } from "@/states/authState";
 export default function useUser() {
   const [session, setSession] = useRecoilState(sessionState);
   const [user, setUser] = useRecoilState(userState);
-  const [loading, setLoading] = useRecoilState(loadingState)
+  const [loading, setLoading] = useRecoilState(loadingState);
 
   // 認証状態の監視
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-      setLoading(false);
+      const savedSession = localStorage.getItem("session");
+      if (savedSession) {
+        setSession(JSON.parse(savedSession));
+        setLoading(false);
+      } else {
+        const { data } = await supabase.auth.getSession();
+        setSession(data.session);
+        setLoading(false);
+        // セッション情報をローカルストレージに保存
+        if (data.session) {
+          localStorage.setItem("session", JSON.stringify(data.session));
+        }
+      }
     };
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setLoading(false);
+
+        // セッション情報をローカルストレージに保存
+        if (session) {
+          localStorage.setItem("session", JSON.stringify(session));
+        } else {
+          localStorage.removeItem("session");
+        }
       }
     );
 
@@ -101,6 +118,8 @@ export default function useUser() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Sign out error:", error.message);
+    } else {
+      localStorage.removeItem("session");
     }
   };
 

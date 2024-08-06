@@ -1,19 +1,34 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import { useRequireAuth } from "@/hooks/useUser";
+import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
 import { useRecoilValue } from "recoil";
 import { sessionState, userState } from "@/states/authState";
+import { useEffect } from "react";
 
 const AllPostList = () => {
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
 
+  const { updateUser } = useUser()
+
   useRequireAuth();
+
+  useEffect(() => {
+    if (session) {
+      fetchUserData();
+    }
+  }, [session]);
+
+  const fetchUserData = async () => {
+    const res = await fetch(`/api/user/${session?.user.id}`);
+    const data = await res.json();
+    updateUser(data.user);
+  };
 
   if (!session) {
     return null;
