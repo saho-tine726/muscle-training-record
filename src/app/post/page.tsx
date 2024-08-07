@@ -1,43 +1,38 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import useUser, { useRequireAuth } from "@/hooks/useUser";
+import { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { sessionState, userState } from "@/states/authState";
-import { useEffect } from "react";
+import { sessionState } from "@/states/authState";
 
 const AllPostList = () => {
-  const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
+  const [posts, setPosts] = useState<PostType[] | undefined>(undefined)
 
-  const { updateUser } = useUser()
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch('/api/post');
+      const data = await response.json();
+      setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
   useRequireAuth();
 
   useEffect(() => {
-    if (session) {
-      fetchUserData();
-    }
-  }, [session]);
-
-  const fetchUserData = async () => {
-    const res = await fetch(`/api/user/${session?.user.id}`);
-    const data = await res.json();
-    updateUser(data.user);
-  };
+    fetchPosts();
+  }, []);
 
   if (!session) {
     return null;
   }
-
-  // 投稿を日付の降順に並べ替える
-  const sortedPosts = user?.posts
-    ? [...user.posts].sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    : [];
 
   return (
     <>
@@ -48,9 +43,9 @@ const AllPostList = () => {
 
           <BodyPartsLinks />
 
-          {sortedPosts.length ? (
+          {posts?.length ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-              {sortedPosts.map((post: PostType) => (
+              {posts.map((post: PostType) => (
                 <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
                   <div>
                     <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>
