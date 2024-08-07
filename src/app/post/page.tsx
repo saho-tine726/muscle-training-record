@@ -1,46 +1,42 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import useUser, { useRequireAuth } from "@/hooks/useUser";
+import { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
-import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { loadingState, sessionState } from "@/states/authState";
+import { userState, loadingState } from "@/states/authState";
+import { useEffect, useState } from "react";
 
 const AllPostList = () => {
-  const session = useRecoilValue(sessionState);
-  const loading = useRecoilValue(loadingState);
+  const user = useRecoilValue(userState);
   const setLoading = useSetRecoilState(loadingState);
   const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
 
-  const { updateUser } = useUser()
-
   const fetchPosts = async () => {
-    setLoading(true);
+    if (!user) return;
+    setLoading(true); // 読み込み中を開始
     try {
-      const response = await fetch('/api/post');
+      const response = await fetch(`/api/post?userId=${user.id}`);
       const data = await response.json();
-      updateUser(data.user);
       setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); // 読み込み中を終了
     }
   };
 
   useRequireAuth();
 
   useEffect(() => {
+    setLoading(true); // 初期読み込み状態を設定
     fetchPosts();
-  }, []);
+  }, [user]);
 
-  if (!session) {
-    return null;
-  }
+  const loading = useRecoilValue(loadingState);
 
   return (
     <>
@@ -52,10 +48,8 @@ const AllPostList = () => {
           <BodyPartsLinks />
 
           {loading ? (
-            <p className="text-center">loading...</p>
-          ) : posts === undefined ? (
-            <p className="text-center">loading...</p>
-          ) : posts.length ? (
+            <p className="text-center">Loading....</p>
+          ) : posts?.length ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
               {posts.map((post: PostType) => (
                 <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
