@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { PostType } from "@/types/post";
-import { useRequireAuth } from "@/hooks/useUser";
+import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
@@ -16,11 +16,14 @@ const AllPostList = () => {
   const setLoading = useSetRecoilState(loadingState);
   const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
 
+  const { updateUser } = useUser()
+
   const fetchPosts = async () => {
     setLoading(true);
     try {
       const response = await fetch('/api/post');
       const data = await response.json();
+      updateUser(data.user);
       setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (error) {
       console.error("Error fetching posts:", error);
