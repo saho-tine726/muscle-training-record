@@ -16,7 +16,13 @@ async function doConnect() {
 export const GET = async (req: Request, res: NextResponse) => {
   try {
     await doConnect();
+    const url = new URL(req.url);
+    const userId = url.searchParams.get("userId");
+    if (!userId) return;
     const posts = await prisma.post.findMany({
+      where: {
+        authorId: userId,
+      },
       include: {
         exerciseEntries: true,
       }

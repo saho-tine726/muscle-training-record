@@ -12,14 +12,15 @@ import { useEffect, useState } from "react";
 import { Post } from "@prisma/client";
 
 const AllPostList = () => {
-  // const user = useRecoilValue(userState);
+  const user = useRecoilValue(userState);
   const [posts, setPosts] = useState<PostType[] | undefined>(undefined)
   // const session = useRecoilValue(sessionState);
 
   // const { updateUser } = useUser()
   const fetchPosts = async () => {
+    if (!user) return;
     try {
-      const response = await fetch('/api/post');
+      const response = await fetch(`/api/post?userId=${user.id}`);
       const data = await response.json();
       setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (error) {
@@ -30,7 +31,7 @@ const AllPostList = () => {
   useRequireAuth();
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [user]);
   // const session = getSession()
 
   // useEffect(() => {

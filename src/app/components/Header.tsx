@@ -5,12 +5,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { sessionState, userState } from "@/states/authState";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const { signOut } = useUser();
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
   const [openMenu, setOpenMenu] = useState(false);
+  const router = useRouter()
 
   const handleMenuOpen = () => {
     setOpenMenu(!openMenu);
@@ -18,6 +20,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOut();
+    router.push("/user/login");
     setOpenMenu(false);
   };
 
