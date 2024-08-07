@@ -7,20 +7,25 @@ import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { sessionState } from "@/states/authState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { loadingState, sessionState } from "@/states/authState";
 
 const AllPostList = () => {
   const session = useRecoilValue(sessionState);
-  const [posts, setPosts] = useState<PostType[] | undefined>(undefined)
+  const loading = useRecoilValue(loadingState);
+  const setLoading = useSetRecoilState(loadingState);
+  const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
 
   const fetchPosts = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/post');
       const data = await response.json();
       setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (error) {
       console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,7 +48,11 @@ const AllPostList = () => {
 
           <BodyPartsLinks />
 
-          {posts?.length ? (
+          {loading ? (
+            <p className="text-center">loading...</p>
+          ) : posts === undefined ? (
+            <p className="text-center">loading...</p>
+          ) : posts.length ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
               {posts.map((post: PostType) => (
                 <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
@@ -67,7 +76,7 @@ const AllPostList = () => {
             <p className="text-center">データがありません</p>
           )}
         </div>
-      </main >
+      </main>
     </>
   );
 };
