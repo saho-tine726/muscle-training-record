@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export const sessionState = atom<Session | null>({
   key: "sessionState",
-  default: null, // 初期値をnullに設定
+  default: null,
 });
 
 export const userState = atom<UserType | null>({
@@ -15,7 +15,7 @@ export const userState = atom<UserType | null>({
 
 export const loadingState = atom<boolean>({
   key: "loadingState",
-  default: false, // 初期状態をfalseに設定
+  default: false,
 });
 
 // クライアントサイドでセッション情報を読み込むカスタムフック

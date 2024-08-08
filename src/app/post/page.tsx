@@ -17,7 +17,7 @@ const AllPostList = () => {
 
   const fetchPosts = async () => {
     if (!user) return;
-    setLoading(true); // 読み込み中を開始
+    setLoading(true);
     try {
       const response = await fetch(`/api/post?userId=${user.id}`);
       const data = await response.json();
@@ -25,14 +25,14 @@ const AllPostList = () => {
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
-      setLoading(false); // 読み込み中を終了
+      setLoading(false);
     }
   };
 
   useRequireAuth();
 
   useEffect(() => {
-    setLoading(true); // 初期読み込み状態を設定
+    setLoading(true);
     fetchPosts();
   }, [user]);
 

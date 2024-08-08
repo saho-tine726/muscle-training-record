@@ -74,10 +74,10 @@ const BodyPartList = () => {
 
   // チャートのデータ
   const data: ChartData<'bar', number[], string> = {
-    labels: latestDates, // x軸のラベルとして最新30件の日付を使用
+    labels: latestDates,
     datasets: [
       {
-        type: 'bar' as const, // 棒グラフ
+        type: 'bar' as const,
         label: "負荷量（重量 × 回数）の推移",
         data: latestDates.map(date => {
           const total = filteredPosts
@@ -85,12 +85,12 @@ const BodyPartList = () => {
             .reduce((sum, post) => sum + post.exerciseEntries
               .filter(entry => entry.bodyPart === bodyPart.toUpperCase())
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
-          return total > 0 ? total : 0; // グラフには0を表示
+          return total > 0 ? total : 0;
         }),
-        backgroundColor: "rgba(233, 42, 42, 0.5)" // グラフの棒の色
+        backgroundColor: "rgba(233, 42, 42, 0.5)"
       },
       {
-        type: 'line' as const, // 折れ線グラフ
+        type: 'line' as const,
         label: "トレーニング負荷（折れ線）",
         data: latestDates.map(date => {
           const total = filteredPosts
@@ -98,13 +98,13 @@ const BodyPartList = () => {
             .reduce((sum, post) => sum + post.exerciseEntries
               .filter(entry => entry.bodyPart === bodyPart.toUpperCase())
               .reduce((total, entry) => total + (entry.weight * entry.repetitions), 0), 0);
-          return total > 0 ? total : 0; // グラフには0を表示
+          return total > 0 ? total : 0;
         }),
-        borderColor: "rgba(233, 42, 42, 1)", // 折れ線の色
-        backgroundColor: "rgba(233, 42, 42, 0.2)", // 折れ線の下の塗りつぶし色
-        fill: true, // 折れ線の下を塗りつぶす
+        borderColor: "rgba(233, 42, 42, 1)",
+        backgroundColor: "rgba(233, 42, 42, 0.2)",
+        fill: true,
       }
-    ] as ChartDataset<'bar', number[]>[] // 型キャスト
+    ] as ChartDataset<'bar', number[]>[]
   };
 
   return (
