@@ -1,7 +1,7 @@
 # 筋トレ記録アプリ
 
 ## 概要
-<img src="https://github.com/user-attachments/assets/3b9944ed-3cce-4c36-abe5-76c54f3df1fd">
+<!-- <img src="https://github.com/user-attachments/assets/3b9944ed-3cce-4c36-abe5-76c54f3df1fd"> -->
 Next.js14 を使用した、筋トレ記録アプリです。<br>
 身体の部位別に筋トレ結果を記録することが可能で、部位別の記録一覧をグラフとともに確認することもできます。<br>
 ユーザー登録をしてからご利用可能です。
