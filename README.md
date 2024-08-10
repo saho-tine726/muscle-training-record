@@ -108,11 +108,15 @@ aaaaaa
 
 ### ★ トレーニング記録全一覧(/post)
 
+<img src="https://github.com/user-attachments/assets/6c843c6d-3b1b-495d-8bb0-a57dc070ef07">
+
 - 日別ごとに集約された記録を全て見ることができる一覧ページ
 - 最新の日付順に表示
 - 記録が 1 件もない場合は「データがありません」と表示
 
 ### ★ 各部位ごとの一覧(/post/[bodyPart])
+
+<img src="https://github.com/user-attachments/assets/a7dd2d23-732f-4100-9883-cf3eebc19804">
 
 - 日別ごと & 各部位ごとに集約された記録が見ることができる一覧ページ
 - URL の[bodyPart]について、①「胸」→「chest」②「背中」→「back」③「脚」→「legs」④「肩」→「shoulders」⑤「腕」→「arms」と部位ごとに動的に変わる（5 部位とも同一の page.tsx を使用）
@@ -120,6 +124,8 @@ aaaaaa
 - 記録が 1 件もない場合は「データがありません」と表示
 
 ### ★ 日別記録の詳細(/post/[id])
+
+<img src="https://github.com/user-attachments/assets/2d18a131-d578-4474-9794-b2e232248258">
 
 - 既に記録されているデータが、フォームに初期セットされるように設定
 - 種目ごとに削除する機能を設定
@@ -130,16 +136,22 @@ aaaaaa
 
 ### ★ マイページ(/mypage)
 
+<img src="https://github.com/user-attachments/assets/ea2742f8-228d-41d8-adf2-c8fadba76e9f">
+
 - 登録されている個人情報が、フォームに初期セットされるように設定
 - ニックネームも変更できるように設定（初期は「ゲスト」という名前）
 
 ### ログイン(/user/login)
+
+<img src="https://github.com/user-attachments/assets/f912b6a1-d97e-4e0e-abf6-9aa1bf7897bb">
 
 - 認証には、Supabase の認証機能を使用（メールアドレス・パスワード）
 - ログイン情報が合っていない場合、「無効なログイン認証情報です。」とのエラーメッセージを表示
 - ログインすると、本日のトレーニング追加ページ(/)へ自動で遷移
 
 ### 新規登録(/user/register)
+
+<img src="https://github.com/user-attachments/assets/84ad87a9-4f4b-4b92-aad4-a8af80125c6f">
 
 - 既に登録されているアカウントの場合、「既に登録されているアカウントです。」とのエラーメッセージを表示
 - 新規登録するとその情報で自動ログインされ、本日のトレーニング追加ページ(/)へ自動で遷移
