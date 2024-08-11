@@ -22,41 +22,62 @@ const AddPost = () => {
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
   const [loading, setLoading] = useState(true);
-  const [hasTodayPost, setHasTodayPost] = useState(true);
+  // const [hasTodayPost, setHasTodayPost] = useState(true);
+  const [hasTodayPost, setHasTodayPost] = useState(false);
   const router = useRouter();
 
   useRequireAuth();
 
-  const isSameDay = (date1: Date, date2: Date) => {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    );
+  // const isSameDay = (date1: Date, date2: Date) => {
+  //   return (
+  //     date1.getFullYear() === date2.getFullYear() &&
+  //     date1.getMonth() === date2.getMonth() &&
+  //     date1.getDate() === date2.getDate()
+  //   );
+  // };
+
+  const fetchPosts = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/post/checkTodayPost?userId=${user.id}`);
+      const data = await response.json();
+      setHasTodayPost(data.message === "Training already recorded today");
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     if (user) {
-      fetch(`/api/user/${user.auth_id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const today = new Date();
-          const hasTodayPost = data.user.posts.some((post: { createdAt: string }) => {
-            const postDate = new Date(post.createdAt);
-            return isSameDay(postDate, today);
-          });
-
-          if (hasTodayPost) {
-            setHasTodayPost(false);
-            router.push("/post");
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch(() => {
-          setLoading(false);
-        });
+      fetchPosts();
     }
+
+    // fetchPosts();
+
+    // if (user) {
+    //   fetch(`/api/post?userId=${user.id}`)
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       const today = new Date();
+    //       const hasTodayPost = data.user.posts.some((post: { createdAt: string }) => {
+    //         const postDate = new Date(post.createdAt);
+    //         return isSameDay(postDate, today);
+    //       });
+
+    //       if (hasTodayPost) {
+    //         setHasTodayPost(false);
+    //         router.push("/post");
+    //       } else {
+    //         setLoading(false);
+    //       }
+    //     })
+    //     .catch(() => {
+    //       setLoading(false);
+    //     });
+    // }
   }, [user]);
 
   const {
