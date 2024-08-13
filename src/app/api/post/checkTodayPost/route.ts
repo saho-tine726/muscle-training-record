@@ -17,8 +17,8 @@ export const GET = async (req: Request, res: NextResponse) => {
   try {
     await doConnect();
 
-    // const today = new Date();
-    // today.setHours(0, 0, 0, 0); // 今日の日付の00:00:00を取得
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 今日の日付の00:00:00を取得
 
     const url = new URL(req.url);
     const userId = url.searchParams.get("userId");
