@@ -36,11 +36,9 @@ export const GET = async (req: Request, res: NextResponse) => {
       }
     });
 
-    if (posts.length > 0) {
-      return NextResponse.json({ message: "Training already recorded today", posts }, { status: 200 });
-    } else {
-      return NextResponse.json({ message: "No training recorded today" }, { status: 200 });
-    }
+    const hasTodayTraining = posts.length > 0;
+
+    return NextResponse.json({ hasTodayTraining, posts }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   } finally {
