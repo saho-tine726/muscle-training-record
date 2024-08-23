@@ -147,9 +147,6 @@ const AddPost = () => {
         {loading ? (
           <div className="flex justify-center items-center flex-col mt-10 gap-10">
             <SyncLoader size={15} color={"#F3F4F6"} />
-            {!hasTodayPost ? (
-              <p className="text-white">今日のトレーニング記録は既に登録済です。（一覧ページに飛びます...）</p>
-            ) : null}
           </div>
         ) : (
           <div className="px-6 py-10 bg-gray-100 rounded-lg shadow-lg">
