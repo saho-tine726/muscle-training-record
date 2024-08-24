@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 const AllPostList = () => {
   const user = useRecoilValue(userState);
+  const loading = useRecoilValue(loadingState);
   const setLoading = useSetRecoilState(loadingState);
   const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
 
@@ -35,8 +36,6 @@ const AllPostList = () => {
     setLoading(true);
     fetchPosts();
   }, [user]);
-
-  const loading = useRecoilValue(loadingState);
 
   return (
     <>
