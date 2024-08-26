@@ -1,3 +1,4 @@
+// TODO カスタムフックというよりutilsとかに入れた方が良さそうです
 // 日付を日本時間のYYYY年MM月DD日に変換
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);

@@ -48,6 +48,8 @@ const MyPage = () => {
     setPasswordError(null);
 
     try {
+      // TODO 知っていたらスルーで良いですが分割代入して書く方法もあります！
+      // 以下何回もdata.を使用しているのでこの場合は分割代入の方が綺麗ですかね
       const updateUserData: any = {
         email: data.email,
         name: data.name,

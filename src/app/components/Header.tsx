@@ -7,6 +7,7 @@ import { useRecoilValue } from "recoil";
 import { sessionState, userState } from "@/states/authState";
 import { useRouter } from "next/navigation";
 
+// このコンポーネントめっちゃ綺麗ですね。カスタムフックと必要最低限のロジックを持っているので、見通しが良いです。
 const Header = () => {
   const { signOut } = useUser();
   const user = useRecoilValue(userState);

@@ -18,6 +18,7 @@ export const loadingState = atom<boolean>({
   default: false,
 });
 
+// TODO hooksディレクトリに入れた方が良いかと！
 // クライアントサイドでセッション情報を読み込むカスタムフック
 export function useSession() {
   const [session, setSession] = useRecoilState(sessionState);

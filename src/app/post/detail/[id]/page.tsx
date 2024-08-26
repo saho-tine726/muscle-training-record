@@ -23,6 +23,7 @@ const PostDetail = () => {
   const session = useRecoilValue(sessionState);
 
   const [loading, setLoading] = useState(true);
+  // TODO undefinedにしましょう
   const [post, setPost] = useState<any>(null);
   const router = useRouter();
 
@@ -59,6 +60,7 @@ const PostDetail = () => {
     ARMS: useFieldArray({ control, name: "exercises.ARMS" }),
   };
 
+  // TODO これもカスタムフックへ！
   useEffect(() => {
     if (user && postId) {
       // 既存のデータを取得してフォームにセットする処理を追加
@@ -96,6 +98,7 @@ const PostDetail = () => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
 
+    // ここもカスタムフックに切り出して短縮させたいですかね！
     try {
       const exerciseEntries = Object.entries(data.exercises)
         .flatMap(([bodyPart, entries]) =>
@@ -114,6 +117,8 @@ const PostDetail = () => {
         return;
       }
 
+      // TODO めっちゃ細いですが全体的に返り値のresは使っていないので、不要なのでは？
+      // await fetch~~~~で良いですね、const res = としているとresどっかで使うのかな？と思ってしまいます
       const res = await fetch(`/api/post/detail/${postId}`, {
         method: "PUT",
         body: JSON.stringify({

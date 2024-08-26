@@ -15,6 +15,7 @@ const AllPostList = () => {
   const setLoading = useSetRecoilState(loadingState);
   const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
 
+  //TODO これもカスタムフックですかね！
   const fetchPosts = async () => {
     if (!user) return;
     setLoading(true);

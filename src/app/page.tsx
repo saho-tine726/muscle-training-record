@@ -27,6 +27,7 @@ const AddPost = () => {
 
   useRequireAuth();
 
+  // TODO ここら辺の処理をカスタムフックに切り出せると良いですね
   const fetchPosts = async () => {
     if (!user) return;
     setLoading(true);
@@ -68,6 +69,7 @@ const AddPost = () => {
     },
   });
 
+  // TODO　constantsに移動させても良さそう
   // 各ボディパートごとのフィールド配列を設定
   const fieldArrays = {
     CHEST: useFieldArray({
@@ -92,6 +94,7 @@ const AddPost = () => {
     }),
   };
 
+  // TODO　ここもカスタムフックですかね、
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     if (!user) return;
 
