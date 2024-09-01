@@ -8,7 +8,7 @@ import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
 import { sessionState, userState } from "@/states/authState";
 import { useRecoilValue } from "recoil";
-import { formatDate } from "@/hooks/useDate";
+import { formatDate } from "@/app/utils/formatData";
 
 type FormValues = {
   exercises: {

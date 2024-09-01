@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
-import { formatDate } from "@/hooks/useDate";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
 import Link from "next/link";
 import { useRecoilValue } from 'recoil';
 import { sessionState, userState } from "@/states/authState";
+import { formatDate } from "./utils/formatData";
 
 type FormValues = {
   exercises: {

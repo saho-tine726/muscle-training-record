@@ -2,13 +2,13 @@
 import Link from "next/link";
 import { PostType } from "@/types/post";
 import { useRequireAuth } from "@/hooks/useUser";
-import { formatDate } from "@/hooks/useDate";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
 import { BodyPartsLinks } from "../components/BodyPartsLinks";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, loadingState } from "@/states/authState";
 import { useEffect, useState } from "react";
+import { formatDate } from "../utils/formatData";
 
 const AllPostList = () => {
   const user = useRecoilValue(userState);
