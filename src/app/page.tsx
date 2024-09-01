@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 import { useRequireAuth } from "@/hooks/useUser";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRecoilValue } from 'recoil';
 import { sessionState, userState } from "@/states/authState";
 import { formatDate } from "./utils/formatData";
+import { useFetchPosts } from "@/hooks/useFetchPosts";
 
 type FormValues = {
   exercises: {
@@ -19,35 +20,16 @@ type FormValues = {
 };
 
 const AddPost = () => {
+  const { loading, setLoading, fetchTodayPost } = useFetchPosts();
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
-  const [loading, setLoading] = useState(true);
-  const [hasTodayPost, setHasTodayPost] = useState(false);
   const router = useRouter();
 
   useRequireAuth();
 
-  const fetchPosts = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/post/checkTodayPost?userId=${user.id}`);
-      const data = await response.json();
-      setHasTodayPost(data.hasTodayTraining);
-
-      if (data.hasTodayTraining) {
-        router.push("/post");
-      }
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (user) {
-      fetchPosts();
+      fetchTodayPost();
     }
   }, [user]);
 

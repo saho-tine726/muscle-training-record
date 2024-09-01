@@ -9,32 +9,17 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, loadingState } from "@/states/authState";
 import { useEffect, useState } from "react";
 import { formatDate } from "../utils/formatData";
+import { useFetchPosts } from "@/hooks/useFetchPosts";
 
 const AllPostList = () => {
+  const { loading, setLoading, fetchAllPosts, posts } = useFetchPosts();
   const user = useRecoilValue(userState);
-  const loading = useRecoilValue(loadingState);
-  const setLoading = useSetRecoilState(loadingState);
-  const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
-
-  const fetchPosts = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/post?userId=${user.id}`);
-      const data = await response.json();
-      setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useRequireAuth();
 
   useEffect(() => {
     setLoading(true);
-    fetchPosts();
+    fetchAllPosts();
   }, [user]);
 
   return (
