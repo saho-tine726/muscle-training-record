@@ -48,13 +48,12 @@ const MyPage = () => {
     setPasswordError(null);
 
     try {
-      const updateUserData: any = {
-        email: data.email,
-        name: data.name,
-      };
+      const { email, name, password } = data;
 
-      if (data.password) {
-        updateUserData['password'] = data.password;
+      const updateUserData: any = { email, name };
+
+      if (password) {
+        updateUserData.password = password;
       }
 
       const res = await fetch(`/api/user/${user?.auth_id}`, {
