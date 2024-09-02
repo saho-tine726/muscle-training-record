@@ -5,7 +5,7 @@ import { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
 import { SyncLoader } from "react-spinners";
-import { sessionState, userState } from "@/states/authState";
+import { sessionState } from "@/states/authState";
 import { useRecoilValue } from "recoil";
 import { formatDate } from "@/app/utils/formatData";
 import { useSubmitPost } from "@/hooks/useSubmitPost";
