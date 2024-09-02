@@ -9,6 +9,7 @@ import { SyncLoader } from "react-spinners";
 import { sessionState, userState } from "@/states/authState";
 import { useRecoilValue } from "recoil";
 import { formatDate } from "@/app/utils/formatData";
+import { useSubmitPost } from "@/hooks/useSubmitPost";
 
 type FormValues = {
   exercises: {
@@ -19,11 +20,12 @@ type FormValues = {
 };
 
 const PostDetail = () => {
+  const { updatePost } = useSubmitPost();
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
 
   const [loading, setLoading] = useState(true);
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<any>(undefined);
   const router = useRouter();
 
   useRequireAuth();
@@ -34,7 +36,6 @@ const PostDetail = () => {
     register,
     handleSubmit,
     control,
-    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -93,46 +94,6 @@ const PostDetail = () => {
     }
   }, [user, postId]);
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (!user) return;
-
-    try {
-      const exerciseEntries = Object.entries(data.exercises)
-        .flatMap(([bodyPart, entries]) =>
-          entries.map(entry => ({
-            bodyPart,
-            exercise: entry.exercise,
-            weight: Number(entry.weight),
-            repetitions: Number(entry.repetitions),
-          }))
-        )
-        .filter(entry => entry.exercise);
-
-      if (exerciseEntries.length === 0) {
-        alert("種目を1つ以上登録してください");
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch(`/api/post/detail/${postId}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          authorId: user.id,
-          exerciseEntries,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      setLoading(false);
-      router.push("/post");
-    } catch (error) {
-      console.error("Error:", error);
-      setLoading(false);
-    }
-  };
-
   const handleDeleteAll = async () => {
     try {
       const res = await fetch(`/api/post/detail/${postId}`, {
@@ -177,7 +138,7 @@ const PostDetail = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(updatePost)}>
               {Object.keys(exercises).map((bodyPart) => {
                 const { fields, append } = fieldArrays[bodyPart as BodyPart];
 

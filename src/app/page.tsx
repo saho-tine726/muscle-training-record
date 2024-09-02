@@ -22,7 +22,7 @@ type FormValues = {
 
 const AddPost = () => {
   const { loading, fetchTodayPost } = useFetchPosts();
-  const { submitTodayTraining } = useSubmitPost();
+  const { submitTodayPost } = useSubmitPost();
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
   const router = useRouter();
@@ -100,7 +100,7 @@ const AddPost = () => {
               <Link href="/post/" className="bg-red-600 px-3 sm:px-4 py-3 rounded-md text-white text-md md:text-lg font-medium transition duration-500 hover:bg-red700">トレーニング記録全一覧へ</Link>
             </div>
 
-            <form onSubmit={handleSubmit(submitTodayTraining)}>
+            <form onSubmit={handleSubmit(submitTodayPost)}>
               {Object.keys(exercises).map((bodyPart) => {
                 const { fields, append } = fieldArrays[bodyPart as BodyPart];
 
