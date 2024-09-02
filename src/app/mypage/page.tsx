@@ -7,7 +7,7 @@ import useUser, { useRequireAuth } from "@/hooks/useUser";
 import { useRecoilValue } from "recoil";
 import { sessionState, userState } from "@/states/authState";
 
-type UpdateUserType = {
+type UpdateUser = {
   email: string;
   name: string;
   password?: string;
@@ -26,7 +26,7 @@ const MyPage = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<UpdateUserType>({
+  } = useForm<UpdateUser>({
     defaultValues: {
       email: "",
       name: "",
@@ -43,7 +43,7 @@ const MyPage = () => {
     }
   }, [user, setValue]);
 
-  const updateUserHandler = async (data: UpdateUserType) => {
+  const updateUserHandler = async (data: UpdateUser) => {
     setLoading(true);
     setPasswordError(null);
 
@@ -91,7 +91,7 @@ const MyPage = () => {
   };
 
 
-  const onSubmit: SubmitHandler<UpdateUserType> = async (data) => {
+  const onSubmit: SubmitHandler<UpdateUser> = async (data) => {
     updateUserHandler(data);
   };
 

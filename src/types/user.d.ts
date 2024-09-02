@@ -1,7 +1,9 @@
-export type UserType = {
+import { Post } from "./post";
+
+export type User = {
   id: string;
   auth_id: string;
   email: string;
   name: string;
-  posts: [];
+  posts: Post[];
 };

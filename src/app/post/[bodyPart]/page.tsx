@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { PostType } from "@/types/post";
+import { Post } from "@/types/post";
 import { useRequireAuth } from "@/hooks/useUser";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
@@ -43,7 +43,7 @@ const BodyPartList = () => {
   const session = useRecoilValue(sessionState);
   const loading = useRecoilValue(loadingState);
   const setLoading = useSetRecoilState(loadingState);
-  const [sortedPosts, setSortedPosts] = useState<PostType[]>([]);
+  const [sortedPosts, setSortedPosts] = useState<Post[]>([]);
   const { bodyPart } = useParams<{ bodyPart: string }>();
 
   const fetchPosts = async () => {
@@ -53,7 +53,7 @@ const BodyPartList = () => {
       const response = await fetch(`/api/post?userId=${user.id}`);
       const data = await response.json();
       // 投稿を日付の降順に並べ替える
-      const sortedPosts = data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const sortedPosts = data.posts.sort((a: Post, b: Post) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       return sortedPosts;
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -90,7 +90,7 @@ const BodyPartList = () => {
   const latestDates = datesWithData.slice(0, 30);
 
   // 指定された部位のトレーニング記録がある投稿だけをフィルタリング
-  const filteredPosts = sortedPosts.filter((post: PostType) =>
+  const filteredPosts = sortedPosts.filter((post: Post) =>
     post.exerciseEntries.some(entry => entry.bodyPart === bodyPart.toUpperCase())
   );
 
@@ -156,7 +156,7 @@ const BodyPartList = () => {
             <div className="mt-5 md:mt-8">
               {filteredPosts.length ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-                  {filteredPosts.map((post: PostType) => (
+                  {filteredPosts.map((post: Post) => (
                     <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
                       <div>
                         <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>

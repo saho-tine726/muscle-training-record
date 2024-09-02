@@ -1,8 +1,8 @@
-import { ExerciseEntryType } from "./exerciseEntry";
+import { ExerciseEntry } from "./exerciseEntry";
 
-export type PostType = {
+export type Post = {
   id: string;
   createdAt: string; // "YYYY/MM/DD"
   authorId: string;
-  exerciseEntries: ExerciseEntryType[];
+  exerciseEntries: ExerciseEntry[];
 };

@@ -1,6 +1,6 @@
 import { atom, useRecoilState } from "recoil";
 import { Session } from "@supabase/supabase-js";
-import { UserType } from "@/types/user";
+import { User } from "@/types/user";
 import { useEffect } from "react";
 
 export const sessionState = atom<Session | null>({
@@ -8,7 +8,7 @@ export const sessionState = atom<Session | null>({
   default: null,
 });
 
-export const userState = atom<UserType | null>({
+export const userState = atom<User | null>({
   key: "userState",
   default: null,
 });

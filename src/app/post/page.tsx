@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { PostType } from "@/types/post";
+import { Post } from "@/types/post";
 import { useRequireAuth } from "@/hooks/useUser";
 import { bodyPartsMap } from "@/constants/bodyPartsMap";
 import { exercisesMap } from "@/constants/exercisesMap";
@@ -35,7 +35,7 @@ const AllPostList = () => {
             <p className="text-center">Loading....</p>
           ) : posts?.length ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-              {posts.map((post: PostType) => (
+              {posts.map((post: Post) => (
                 <div key={post.id} className="bg-gray-300 rounded-lg p-3 flex flex-col justify-between">
                   <div>
                     <p className="font-bold text-sm md:text-md border-b-2 border-gray-900 pb-1">{formatDate(post.createdAt)}</p>

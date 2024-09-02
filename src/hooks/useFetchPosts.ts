@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRecoilValue } from 'recoil';
 import { userState } from "@/states/authState";
-import { PostType } from "@/types/post";
+import { Post } from "@/types/post";
 
 export const useFetchPosts = () => {
   const user = useRecoilValue(userState);
   const [loading, setLoading] = useState(true);
   const [hasTodayPost, setHasTodayPost] = useState(false);
-  const [posts, setPosts] = useState<PostType[] | undefined>(undefined);
+  const [posts, setPosts] = useState<Post[] | undefined>(undefined);
   const router = useRouter();
 
   // 今日のデータが既に登録されているかチェック
@@ -37,7 +37,7 @@ export const useFetchPosts = () => {
     try {
       const response = await fetch(`/api/post?userId=${user.id}`);
       const data = await response.json();
-      setPosts(data.posts.sort((a: PostType, b: PostType) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+      setPosts(data.posts.sort((a: Post, b: Post) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {

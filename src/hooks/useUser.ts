@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRecoilState } from "recoil";
 import { supabase } from "@/utils/supabase";
-import { UserType } from "@/types/user";
+import { User } from "@/types/user";
 import { loadingState, sessionState, userState } from "@/states/authState";
 
 export default function useUser() {
@@ -66,7 +66,7 @@ export default function useUser() {
   }, [session]);
 
   // ユーザー情報の更新
-  const updateUser = (updatedUser: UserType) => {
+  const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
   };
 

@@ -1,4 +1,4 @@
-export type ExerciseEntryType = {
+export type ExerciseEntry = {
   id: string;
   postId: string;
   bodyPart: string;
