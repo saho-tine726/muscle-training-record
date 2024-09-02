@@ -10,6 +10,7 @@ import { sessionState, userState } from "@/states/authState";
 import { useRecoilValue } from "recoil";
 import { formatDate } from "@/app/utils/formatData";
 import { useSubmitPost } from "@/hooks/useSubmitPost";
+import { createFieldArrays } from "@/constants/fieldArrays";
 
 type FormValues = {
   exercises: {
@@ -51,14 +52,8 @@ const PostDetail = () => {
     },
   });
 
-  // useFieldArrayをボディパートごとに設定する
-  const fieldArrays = {
-    CHEST: useFieldArray({ control, name: "exercises.CHEST" }),
-    BACK: useFieldArray({ control, name: "exercises.BACK" }),
-    LEGS: useFieldArray({ control, name: "exercises.LEGS" }),
-    SHOULDERS: useFieldArray({ control, name: "exercises.SHOULDERS" }),
-    ARMS: useFieldArray({ control, name: "exercises.ARMS" }),
-  };
+  // 各ボディパートごとのフィールド配列を設定
+  const fieldArrays = createFieldArrays(control);
 
   useEffect(() => {
     if (user && postId) {

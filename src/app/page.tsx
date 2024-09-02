@@ -12,6 +12,7 @@ import { sessionState, userState } from "@/states/authState";
 import { formatDate } from "./utils/formatData";
 import { useFetchPosts } from "@/hooks/useFetchPosts";
 import { useSubmitPost } from "@/hooks/useSubmitPost";
+import { createFieldArrays } from "@/constants/fieldArrays";
 
 type FormValues = {
   exercises: {
@@ -53,28 +54,7 @@ const AddPost = () => {
   });
 
   // 各ボディパートごとのフィールド配列を設定
-  const fieldArrays = {
-    CHEST: useFieldArray({
-      control,
-      name: "exercises.CHEST",
-    }),
-    BACK: useFieldArray({
-      control,
-      name: "exercises.BACK",
-    }),
-    LEGS: useFieldArray({
-      control,
-      name: "exercises.LEGS",
-    }),
-    SHOULDERS: useFieldArray({
-      control,
-      name: "exercises.SHOULDERS",
-    }),
-    ARMS: useFieldArray({
-      control,
-      name: "exercises.ARMS",
-    }),
-  };
+  const fieldArrays = createFieldArrays(control);
 
   const today = new Date();
 
