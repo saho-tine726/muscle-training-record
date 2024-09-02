@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import { sessionState, userState } from "@/states/authState";
 import { formatDate } from "./utils/formatData";
 import { useFetchPosts } from "@/hooks/useFetchPosts";
+import { useSubmitPost } from "@/hooks/useSubmitPost";
 
 type FormValues = {
   exercises: {
@@ -20,7 +21,8 @@ type FormValues = {
 };
 
 const AddPost = () => {
-  const { loading, setLoading, fetchTodayPost } = useFetchPosts();
+  const { loading, fetchTodayPost } = useFetchPosts();
+  const { submitTodayTraining } = useSubmitPost();
   const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
   const router = useRouter();
@@ -74,48 +76,6 @@ const AddPost = () => {
     }),
   };
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    if (!user) return;
-
-    setLoading(true);
-
-    try {
-      const exerciseEntries = Object.entries(data.exercises)
-        .flatMap(([bodyPart, entries]) =>
-          entries.map(entry => ({
-            bodyPart,
-            exercise: entry.exercise,
-            weight: Number(entry.weight),
-            repetitions: Number(entry.repetitions),
-          }))
-        )
-        .filter(entry => entry.exercise);
-
-      if (exerciseEntries.length === 0) {
-        alert("種目を1つ以上登録してください");
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch("/api/post/", {
-        cache: "no-store", // SSR
-        method: "POST",
-        body: JSON.stringify({
-          authorId: user.id,
-          exerciseEntries,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setLoading(false);
-      router.push("/post");
-    } catch (error) {
-      console.error("Error:", error);
-      setLoading(false);
-    }
-  };
-
   const today = new Date();
 
   if (!session) {
@@ -140,7 +100,7 @@ const AddPost = () => {
               <Link href="/post/" className="bg-red-600 px-3 sm:px-4 py-3 rounded-md text-white text-md md:text-lg font-medium transition duration-500 hover:bg-red700">トレーニング記録全一覧へ</Link>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(submitTodayTraining)}>
               {Object.keys(exercises).map((bodyPart) => {
                 const { fields, append } = fieldArrays[bodyPart as BodyPart];
 
