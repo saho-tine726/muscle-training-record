@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useRequireAuth } from "@/hooks/useUser";
@@ -11,6 +10,7 @@ import { useRecoilValue } from "recoil";
 import { formatDate } from "@/app/utils/formatData";
 import { useSubmitPost } from "@/hooks/useSubmitPost";
 import { useFieldArrays } from "@/hooks/useFieldArrays";
+import { useFetchPostDetail } from "@/hooks/useFetchPostDetail";
 
 type FormValues = {
   exercises: {
@@ -22,11 +22,7 @@ type FormValues = {
 
 const PostDetail = () => {
   const { updatePost } = useSubmitPost();
-  const user = useRecoilValue(userState);
   const session = useRecoilValue(sessionState);
-
-  const [loading, setLoading] = useState(true);
-  const [post, setPost] = useState<any>(undefined);
   const router = useRouter();
 
   useRequireAuth();
@@ -55,40 +51,10 @@ const PostDetail = () => {
   // 各ボディパートごとのフィールド配列を設定
   const fieldArrays = useFieldArrays(control);
 
-  useEffect(() => {
-    if (user && postId) {
-      // 既存のデータを取得してフォームにセットする処理を追加
-      fetch(`/api/post/detail/${postId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setPost(data.post);
-          setLoading(false);
+  // 既存のデータを取得してフォームにセット
+  const { loading, setLoading, post } = useFetchPostDetail(control, fieldArrays);
 
-          const entriesByBodyPart: Record<BodyPart, any[]> = {
-            CHEST: [],
-            BACK: [],
-            LEGS: [],
-            SHOULDERS: [],
-            ARMS: [],
-          };
-
-          data.post.exerciseEntries.forEach((entry: any) => {
-            entriesByBodyPart[entry.bodyPart as BodyPart].push(entry);
-          });
-
-          Object.keys(entriesByBodyPart).forEach((bodyPart) => {
-            const entries = entriesByBodyPart[bodyPart as BodyPart];
-            // 既存のフィールドをリセット
-            fieldArrays[bodyPart as BodyPart].replace(entries.map(entry => ({
-              exercise: entry.exercise,
-              weight: entry.weight,
-              repetitions: entry.repetitions,
-            })));
-          });
-        });
-    }
-  }, [user, postId]);
-
+  // その日の記録を全て削除
   const handleDeleteAll = async () => {
     try {
       const res = await fetch(`/api/post/detail/${postId}`, {
@@ -105,6 +71,7 @@ const PostDetail = () => {
     }
   }
 
+  // 各エクササイズごとの削除
   const handleDeleteExercise = (bodyPart: BodyPart, index: number) => {
     fieldArrays[bodyPart].remove(index);
   }
