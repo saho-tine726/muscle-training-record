@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useRequireAuth } from "@/hooks/useUser";
 import { BodyPart } from "@prisma/client";
 import { bodyParts, exerciseNames, exercises } from "@/constants/formMap";
@@ -10,7 +10,7 @@ import { sessionState, userState } from "@/states/authState";
 import { useRecoilValue } from "recoil";
 import { formatDate } from "@/app/utils/formatData";
 import { useSubmitPost } from "@/hooks/useSubmitPost";
-import { createFieldArrays } from "@/constants/fieldArrays";
+import { useFieldArrays } from "@/hooks/useFieldArrays";
 
 type FormValues = {
   exercises: {
@@ -53,7 +53,7 @@ const PostDetail = () => {
   });
 
   // 各ボディパートごとのフィールド配列を設定
-  const fieldArrays = createFieldArrays(control);
+  const fieldArrays = useFieldArrays(control);
 
   useEffect(() => {
     if (user && postId) {
