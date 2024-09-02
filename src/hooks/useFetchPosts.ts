@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRecoilValue } from 'recoil';
 import { userState } from "@/states/authState";
