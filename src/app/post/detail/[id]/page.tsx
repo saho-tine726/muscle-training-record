@@ -57,7 +57,7 @@ const PostDetail = () => {
   // その日の記録を全て削除
   const handleDeleteAll = async () => {
     try {
-      const res = await fetch(`/api/post/detail/${postId}`, {
+      await fetch(`/api/post/detail/${postId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
