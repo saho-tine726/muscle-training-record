@@ -1,14 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/libs/prisma';
 
 // 本日のトレーニングが既に記録されているか確認するAPI
-export const GET = async (req: Request) => {
+export const GET = async (req: NextRequest) => {
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // 今日の日付の00:00:00を取得
-
-    const url = new URL(req.url);
-    const userId = url.searchParams.get('userId');
+    const userId = req.nextUrl.searchParams.get('userId');
 
     if (!userId) {
       return NextResponse.json(
@@ -16,6 +12,9 @@ export const GET = async (req: Request) => {
         { status: 400 }
       );
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     const posts = await prisma.post.findMany({
       where: {
