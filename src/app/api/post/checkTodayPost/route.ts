@@ -4,7 +4,8 @@ import { prisma } from '@/libs/prisma';
 // 本日のトレーニングが既に記録されているか確認するAPI
 export const GET = async (req: NextRequest) => {
   try {
-    const userId = req.nextUrl.searchParams.get('userId');
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
 
     if (!userId) {
       return NextResponse.json(
