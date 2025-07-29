@@ -53,15 +53,27 @@ export default function useUser() {
   useEffect(() => {
     const setupUser = async () => {
       if (session?.user.id) {
-        const response = await fetch(`/api/user/${session.user.id}`);
-        if (response.ok) {
+        try {
+          const response = await fetch(`/api/user/${session.user.id}`);
+
+          if (!response.ok) {
+            const errorBody = await response.json().catch(() => ({})); // JSONでない場合もある
+            console.error('ユーザーデータの取得に失敗しました:', {
+              status: response.status,
+              statusText: response.statusText,
+              body: errorBody,
+            });
+            return;
+          }
+
           const data = await response.json();
           setUser(data.user);
-        } else {
-          console.error('ユーザーデータの取得に失敗しました');
+        } catch (err) {
+          console.error('fetch中に例外が発生しました:', err);
         }
       }
     };
+
     setupUser();
   }, [session]);
 
