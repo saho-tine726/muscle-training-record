@@ -30,7 +30,29 @@ export const GET = async (req: Request, res: NextResponse) => {
     });
     return NextResponse.json({ message: 'Success', user }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: 'Error', error }, { status: 500 });
+    console.error('Prismaエラー詳細:', {
+      name: (error as Error).name,
+      message: (error as Error).message,
+      stack:
+        process.env.NODE_ENV === 'development'
+          ? (error as Error).stack
+          : undefined,
+    });
+
+    return NextResponse.json(
+      {
+        message: 'Error',
+        error: {
+          name: (error as Error).name,
+          message: (error as Error).message,
+          stack:
+            process.env.NODE_ENV === 'development'
+              ? (error as Error).stack
+              : undefined,
+        },
+      },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }

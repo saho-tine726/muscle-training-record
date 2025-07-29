@@ -61,7 +61,7 @@ export default function useUser() {
             console.error('ユーザーデータの取得に失敗しました:', {
               status: response.status,
               statusText: response.statusText,
-              body: errorBody,
+              error: errorBody.error || errorBody,
             });
             return;
           }
