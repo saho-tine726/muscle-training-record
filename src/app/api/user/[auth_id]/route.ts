@@ -1,17 +1,23 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/libs/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// DB接続
+async function doConnect() {
+  try {
+    await prisma.$connect();
+  } catch (error) {
+    return Error('DB接続に失敗しました');
+  }
+}
 
 // ユーザー情報 取得API
-export const GET = async (req: Request) => {
-  try {
-    const auth_id = req.url.split('/user/')[1];
-    if (!auth_id) {
-      return NextResponse.json(
-        { message: 'auth_id is required' },
-        { status: 400 }
-      );
-    }
+export const GET = async (req: Request, res: NextResponse) => {
+  const auth_id: string = req.url.split('/user/')[1];
 
+  try {
+    await doConnect();
     const user = await prisma.user.findUnique({
       where: { auth_id },
       include: {
@@ -22,26 +28,22 @@ export const GET = async (req: Request) => {
         },
       },
     });
-
     return NextResponse.json({ message: 'Success', user }, { status: 200 });
   } catch (error) {
-    console.error('GET /api/user/[auth_id] Error:', error);
     return NextResponse.json({ message: 'Error', error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
 // ユーザー情報 編集API
-export const PUT = async (req: Request) => {
+export const PUT = async (req: Request, res: NextResponse) => {
   try {
-    const auth_id = req.url.split('/user/')[1];
-    if (!auth_id) {
-      return NextResponse.json(
-        { message: 'auth_id is required' },
-        { status: 400 }
-      );
-    }
-
     const { email, name } = await req.json();
+
+    const auth_id: string = req.url.split('/user/')[1];
+
+    await doConnect();
 
     const user = await prisma.user.update({
       where: { auth_id },
@@ -50,24 +52,20 @@ export const PUT = async (req: Request) => {
         name,
       },
     });
-
     return NextResponse.json({ message: 'Success', user }, { status: 200 });
   } catch (error) {
-    console.error('PUT /api/user/[auth_id] Error:', error);
     return NextResponse.json({ message: 'Error', error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
-// ユーザー情報 登録API
-export const POST = async (req: Request) => {
+// ユーザー情報 登録API(Supabaseに登録したと同時に、Prismaのuserにもpostするように)
+export const POST = async (req: Request, res: NextResponse) => {
   try {
     const { auth_id, email } = await req.json();
-    if (!auth_id || !email) {
-      return NextResponse.json(
-        { message: 'auth_id and email are required' },
-        { status: 400 }
-      );
-    }
+
+    await doConnect();
 
     const user = await prisma.user.create({
       data: {
@@ -75,10 +73,10 @@ export const POST = async (req: Request) => {
         email,
       },
     });
-
     return NextResponse.json({ message: 'Success', user }, { status: 201 });
   } catch (error) {
-    console.error('POST /api/user/[auth_id] Error:', error);
     return NextResponse.json({ message: 'Error', error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 };

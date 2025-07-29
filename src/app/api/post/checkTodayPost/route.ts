@@ -1,21 +1,28 @@
-import { NextResponse, NextRequest } from 'next/server';
-import { prisma } from '@/libs/prisma';
+import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// DB接続
+async function doConnect() {
+  try {
+    await prisma.$connect();
+  } catch (error) {
+    return Error('DB接続に失敗しました');
+  }
+}
 
 // 本日のトレーニングが既に記録されているか確認するAPI
-export const GET = async (req: NextRequest) => {
+export const GET = async (req: Request, res: NextResponse) => {
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json(
-        { message: 'userId is required' },
-        { status: 400 }
-      );
-    }
+    await doConnect();
 
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0); // 今日の日付の00:00:00を取得
+
+    const url = new URL(req.url);
+    const userId = url.searchParams.get('userId');
+    if (!userId) return;
 
     const posts = await prisma.post.findMany({
       where: {
@@ -33,7 +40,8 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json({ hasTodayTraining, posts }, { status: 200 });
   } catch (error) {
-    console.error('checkTodayPost Error:', error);
     return NextResponse.json({ message: 'Error', error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 };
