@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { supabase } from '@/utils/supabase';
 import { User } from '@/types/user';
 import { loadingState, sessionState, userState } from '@/states/authState';
@@ -13,18 +13,32 @@ export default function useUser() {
   // 認証状態の監視
   useEffect(() => {
     const getSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error('セッションの取得に失敗しました:', error.message);
+      const savedSession = localStorage.getItem('session');
+      if (savedSession) {
+        setSession(JSON.parse(savedSession));
+        setLoading(false);
+      } else {
+        const { data } = await supabase.auth.getSession();
+        setSession(data.session);
+        setLoading(false);
+        // セッション情報をローカルストレージに保存
+        if (data.session) {
+          localStorage.setItem('session', JSON.stringify(data.session));
+        }
       }
-      setSession(data.session);
-      setLoading(false);
     };
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session);
         setLoading(false);
+
+        // セッション情報をローカルストレージに保存
+        if (session) {
+          localStorage.setItem('session', JSON.stringify(session));
+        } else {
+          localStorage.removeItem('session');
+        }
       }
     );
 
@@ -69,7 +83,7 @@ export default function useUser() {
     if (error) {
       console.error('Sign up error:', error.message);
     } else if (data.user) {
-      await fetch(`/api/user/${data.user.id}`, {
+      await fetch(`/api/user/${user?.auth_id}`, {
         method: 'POST',
         body: JSON.stringify({
           auth_id: data.user.id,
@@ -104,6 +118,8 @@ export default function useUser() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('Sign out error:', error.message);
+    } else {
+      localStorage.removeItem('session');
     }
   };
 
@@ -112,13 +128,14 @@ export default function useUser() {
 
 // ログインしていない時にログインページに戻るフック
 export const useRequireAuth = () => {
-  const session = useRecoilValue(sessionState);
   const router = useRouter();
 
-  useEffect(() => {
-    if (session === undefined) return; // ロード中
-    if (!session) {
+  if (typeof window !== 'undefined') {
+    const savedSession = localStorage.getItem('session');
+    const hasSessionInLocalStorage = savedSession !== null;
+
+    if (!hasSessionInLocalStorage) {
       router.push('/user/login');
     }
-  }, [session]);
+  }
 };
